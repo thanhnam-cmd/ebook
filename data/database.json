@@ -1,0 +1,666 @@
+{
+  "products": [
+    {
+      "title": "abc",
+      "tagline": "",
+      "type": "combo",
+      "price": 120000,
+      "original_price": 120009,
+      "pages": 70,
+      "status": "hidden",
+      "file_path": "/ebooks/tai-lieu-moi.pdf",
+      "table_of_contents": [
+        "Chương 1",
+        "Chương 2"
+      ],
+      "description": "abbbbbbb",
+      "sample_read_url": "",
+      "for_whom": [
+        "Người tìm kiếm giải pháp thực chiến"
+      ],
+      "not_for_whom": [
+        "Người không hành động"
+      ],
+      "id": "prod_1791944327420",
+      "slug": "abc"
+    },
+    {
+      "id": "mat-ma-tinh-thuc",
+      "title": "Mật Mã Tỉnh Thức",
+      "slug": "mat-ma-tinh-thuc",
+      "type": "single",
+      "tagline": "Làm chủ nội tâm, giải phóng lo âu và định vị bản thân giữa kỷ nguyên biến động",
+      "description": "Cuốn sách cung cấp hệ thống 6 thấu kính giúp bạn nhìn thấu cơ chế vận hành của cảm xúc, làm dịu tâm trí quá tải và thiết lập trạng thái tập trung sâu bền bỉ mỗi ngày.",
+      "price": 116000,
+      "original_price": 168000,
+      "pages": 148,
+      "status": "active",
+      "file_path": "/ebooks/mat-ma-tinh-thuc.pdf",
+      "sample_read_url": "https://drive.google.com/file/d/1_Sample_MatMaTinhThuc_Preview/view",
+      "badge": "Khuyên đọc",
+      "table_of_contents": [
+        "Chương 1: Bóc tách cơ chế nhiễu loạn tâm trí trong kỷ nguyên số",
+        "Chương 2: Nhận diện và thoát khỏi chiếc bẫy phản ứng cảm xúc tự động",
+        "Chương 3: Tái thiết lập thói quen cốt lõi & nghi thức buổi sáng định tâm",
+        "Chương 4: Kỹ thuật kích hoạt năng lượng tập trung sâu (Deep Work)",
+        "Chương 5: Hóa giải hội chứng kẻ mạo danh và hoài nghi bản thân",
+        "Chương 6: Neo giữ bình an nội tại trước mọi áp lực ngoại cảnh"
+      ],
+      "for_whom": [
+        "Người thường xuyên căng thẳng, overthinking, mất tập trung trong công việc",
+        "Người đang đứng trước quyết định lớn và cần sự sáng suốt nội tâm",
+        "Bất kỳ ai muốn sống chậm lại, sâu sắc hơn và thấu hiểu chính mình"
+      ],
+      "not_for_whom": [
+        "Người tìm kiếm liệu pháp tâm lý huyền bí hoặc giáo điều thần bí",
+        "Người mong đợi thay đổi chỉ sau một đêm mà không thực hành bài tập"
+      ],
+      "themeColor": {
+        "primary": "#0284c7",
+        "secondary": "#0369a1",
+        "accent": "#e0f2fe"
+      },
+      "image_url": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=800&q=80",
+      "image_config": {
+        "aspectRatio": "3/4",
+        "objectFit": "cover",
+        "objectPosition": "center",
+        "borderRadius": "xl",
+        "filterPreset": "cinematic",
+        "hoverEffect": "zoom",
+        "overlayOpacity": 30,
+        "showBorder": true
+      }
+    },
+    {
+      "id": "mat-ma-ket-noi",
+      "title": "Mật Mã Kết Nối",
+      "slug": "mat-ma-ket-noi",
+      "type": "single",
+      "tagline": "Nghệ thuật giao tiếp thấu cảm, đàm phán thuyết phục và kiến tạo mối quan hệ tin cậy",
+      "description": "Chuyển hóa từ người sợ giao tiếp thành người có sức hút tự nhiên. Bộ công cụ thực chiến giúp bạn mở lời tự tin, thấu hiểu ngầm ý và bảo vệ ranh giới cá nhân lành mạnh.",
+      "price": 128000,
+      "original_price": 188000,
+      "pages": 165,
+      "status": "active",
+      "file_path": "/ebooks/mat-ma-ket-noi.pdf",
+      "sample_read_url": "https://drive.google.com/file/d/1_Sample_MatMaKetNoi_Preview/view",
+      "badge": "Bán chạy",
+      "table_of_contents": [
+        "Phần 1: Lắng nghe chủ động và kỹ thuật đọc vị vi biểu cảm",
+        "Phần 2: Cấu trúc thông điệp 3 bước: Rõ ràng - Ngắn gọn - Thuyết phục",
+        "Phần 3: Nguyên lý đàm phán cùng thắng (Win-Win) trong công việc",
+        "Phần 4: Xử lý xung đột và từ chối khéo léo mà không gây mất lòng",
+        "Phần 5: Nuôi dưỡng mạng lưới quan hệ chất lượng cao trong dài hạn"
+      ],
+      "for_whom": [
+        "Người làm việc trong môi trường tập thể, thường xuyên phải báo cáo & thuyết trình",
+        "Quản lý, trưởng nhóm, người làm dịch vụ khách hàng hoặc đối ngoại",
+        "Người hướng nội muốn mở rộng quan hệ mà không thấy kiệt sức"
+      ],
+      "not_for_whom": [
+        "Người muốn học các chiêu trò thao túng tâm lý hoặc xã giao vụ lợi",
+        "Người không sẵn sàng đặt mình vào vị trí của đối phương"
+      ],
+      "themeColor": {
+        "primary": "#2563eb",
+        "secondary": "#1d4ed8",
+        "accent": "#dbeafe"
+      },
+      "image_url": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
+      "image_config": {
+        "aspectRatio": "3/4",
+        "objectFit": "cover",
+        "objectPosition": "center",
+        "borderRadius": "xl",
+        "filterPreset": "warm",
+        "hoverEffect": "zoom",
+        "overlayOpacity": 35,
+        "showBorder": true
+      }
+    },
+    {
+      "id": "mat-ma-tai-chinh",
+      "title": "Mật Mã Tài Chính",
+      "slug": "mat-ma-tai-chinh",
+      "type": "single",
+      "tagline": "Làm chủ dòng tiền hôm nay, xây dựng tư duy phòng thủ và tự do tài chính bền vững",
+      "description": "Không dạy bạn đầu cơ mạo hiểm. Cuốn sách giúp bạn bịt kín các lỗ rò rỉ ngân sách, xây dựng quỹ dự phòng thép và thiết lập kỷ luật đầu tư tự động hóa.",
+      "price": 138000,
+      "original_price": 198000,
+      "pages": 182,
+      "status": "active",
+      "file_path": "/ebooks/mat-ma-tai-chinh.pdf",
+      "sample_read_url": "https://drive.google.com/file/d/1_Sample_MatMaTaiChinh_Preview/view",
+      "badge": "Thực chiến",
+      "table_of_contents": [
+        "Chương 1: Kiểm toán cá nhân & Vạch trần 5 điểm mù tiêu dùng ngầm",
+        "Chương 2: Mô hình phân bổ ngân sách 5 hũ thông minh theo thu nhập thực tế",
+        "Chương 3: Xây dựng lá chắn phòng thủ: Quỹ khẩn cấp và bảo vệ tài sản",
+        "Chương 4: Bẫy nợ tín dụng và phương pháp tất toán nợ tối ưu (Snowball/Avalanche)",
+        "Chương 5: Bắt đầu đầu tư tích lũy an toàn cho người không chuyên",
+        "Chương 6: Bản đồ lộ trình 5 giai đoạn chạm đến tự do tài chính"
+      ],
+      "for_whom": [
+        "Người đi làm cảm thấy thu nhập tăng nhưng không tích lũy được tiền",
+        "Người muốn có bảng kế hoạch tài chính rõ ràng, khoa học cho bản thân và gia đình",
+        "Người mới bắt đầu tìm hiểu về đầu tư giá trị và quản trị rủi ro cá nhân"
+      ],
+      "not_for_whom": [
+        "Người tìm kiếm bí kíp làm giàu siêu tốc hoặc đầu cơ lướt sóng",
+        "Người thiếu kiên nhẫn với các nguyên tắc kỷ luật tài chính cơ bản"
+      ],
+      "themeColor": {
+        "primary": "#059669",
+        "secondary": "#047857",
+        "accent": "#d1fae5"
+      },
+      "image_url": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80",
+      "image_config": {
+        "aspectRatio": "3/4",
+        "objectFit": "cover",
+        "objectPosition": "center",
+        "borderRadius": "xl",
+        "filterPreset": "vibrant",
+        "hoverEffect": "zoom",
+        "overlayOpacity": 30,
+        "showBorder": true
+      }
+    },
+    {
+      "id": "combo-thau-suot-ket-noi",
+      "title": "Combo Thấu Suốt & Kết Nối",
+      "slug": "combo-thau-suot-ket-noi",
+      "type": "combo",
+      "tagline": "Tâm an bên trong - Giao tiếp tinh tế bên ngoài (2 Ebook)",
+      "description": "Sự kết hợp hoàn hảo giữa năng lực thấu hiểu chính mình (Mật Mã Tỉnh Thức) và năng lực thấu hiểu người khác (Mật Mã Kết Nối). Giải quyết triệt để rào cản nội tâm và cải thiện mối quan hệ xã hội.",
+      "price": 207000,
+      "original_price": 356000,
+      "pages": 313,
+      "status": "active",
+      "file_path": "/ebooks/combo-thau-suot-ket-noi.pdf",
+      "sample_read_url": "https://drive.google.com/file/d/1_Sample_ComboThauSuot_Preview/view",
+      "badge": "Tiết kiệm 42%",
+      "included_books": [
+        "Mật Mã Tỉnh Thức",
+        "Mật Mã Kết Nối"
+      ],
+      "table_of_contents": [
+        "Trọn bộ Ebook Mật Mã Tỉnh Thức (148 trang)",
+        "Trọn bộ Ebook Mật Mã Kết Nối (165 trang)",
+        "Tặng kèm: Bảng checklist 14 ngày rèn luyện giao tiếp tỉnh thức"
+      ],
+      "for_whom": [
+        "Người muốn phát triển toàn diện trí tuệ cảm xúc (EQ) và năng lực thấu cảm",
+        "Người cảm thấy giao tiếp ngượng ngùng xuất phát từ sự bất an trong lòng"
+      ],
+      "not_for_whom": [
+        "Người chỉ quan tâm đến kiến thức đầu tư tiền tệ"
+      ],
+      "themeColor": {
+        "primary": "#3b82f6",
+        "secondary": "#1d4ed8",
+        "accent": "#eff6ff"
+      }
+    },
+    {
+      "id": "combo-tinh-thuc-thinh-vuong",
+      "title": "Combo Tỉnh Thức & Thịnh Vượng",
+      "slug": "combo-tinh-thuc-thinh-vuong",
+      "type": "combo",
+      "tagline": "Tư duy sáng suốt - Kiến tạo tài chính vững vàng (2 Ebook)",
+      "description": "Muốn giữ được tiền, trước hết tâm trí phải vững vàng trước mọi cám dỗ FOMO. Gói combo kết hợp năng lượng tỉnh thức với tư duy quản trị tài chính thực chiến.",
+      "price": 219000,
+      "original_price": 366000,
+      "pages": 330,
+      "status": "active",
+      "file_path": "/ebooks/combo-tinh-thuc-thinh-vuong.pdf",
+      "sample_read_url": "https://drive.google.com/file/d/1_Sample_ComboThinhVuong_Preview/view",
+      "badge": "Tiết kiệm 40%",
+      "included_books": [
+        "Mật Mã Tỉnh Thức",
+        "Mật Mã Tài Chính"
+      ],
+      "table_of_contents": [
+        "Trọn bộ Ebook Mật Mã Tỉnh Thức (148 trang)",
+        "Trọn bộ Ebook Mật Mã Tài Chính (182 trang)",
+        "Tặng kèm: File tính Excel phân bổ ngân sách 5 hũ tự động"
+      ],
+      "for_whom": [
+        "Người nhận ra các quyết định chi tiêu sai lầm thường bắt nguồn từ cảm xúc lo âu",
+        "Người muốn xây dựng cuộc sống vừa an yên vừa vững vàng về mặt vật chất"
+      ],
+      "not_for_whom": [
+        "Người không muốn theo dõi dòng tiền hàng tháng"
+      ],
+      "themeColor": {
+        "primary": "#0284c7",
+        "secondary": "#0f766e",
+        "accent": "#e0f2fe"
+      }
+    },
+    {
+      "id": "combo-dong-hanh-toan-dien",
+      "title": "Combo Đồng Hành Toàn Diện",
+      "slug": "combo-dong-hanh-toan-dien",
+      "type": "combo",
+      "tagline": "Mở rộng quan hệ chất lượng & Nhân bản cơ hội gia tăng thu nhập (2 Ebook)",
+      "description": "Quan hệ tốt mang lại cơ hội tốt; quản trị tài chính chuẩn mực giúp bảo toàn và nhân rộng thành quả. Sự kết hợp giữa Mật Mã Kết Nối và Mật Mã Tài Chính.",
+      "price": 225000,
+      "original_price": 386000,
+      "pages": 347,
+      "status": "active",
+      "file_path": "/ebooks/combo-dong-hanh-toan-dien.pdf",
+      "sample_read_url": "https://drive.google.com/file/d/1_Sample_ComboDongHanh_Preview/view",
+      "badge": "Tiết kiệm 42%",
+      "included_books": [
+        "Mật Mã Kết Nối",
+        "Mật Mã Tài Chính"
+      ],
+      "table_of_contents": [
+        "Trọn bộ Ebook Mật Mã Kết Nối (165 trang)",
+        "Trọn bộ Ebook Mật Mã Tài Chính (182 trang)",
+        "Tặng kèm: Kịch bản đàm phán tăng lương & phân bổ dòng vốn"
+      ],
+      "for_whom": [
+        "Người làm kinh doanh tự do, freelancer, quản lý muốn bứt phá thu nhập",
+        "Người muốn nâng cao giá trị bản thân trong mắt đối tác và thị trường"
+      ],
+      "not_for_whom": [
+        "Người chỉ tìm kiếm phương pháp thiền định cá nhân"
+      ],
+      "themeColor": {
+        "primary": "#4f46e5",
+        "secondary": "#3730a3",
+        "accent": "#eef2ff"
+      }
+    },
+    {
+      "id": "combo-bo-ba-mat-ma",
+      "title": "Combo Trọn Bộ Ba Mật Mã",
+      "slug": "combo-bo-ba-mat-ma",
+      "type": "combo",
+      "tagline": "Bộ ba chuyển hóa toàn diện: Thân - Tâm - Trí & Đột phá Tài chính (Trọn bộ 3 Ebook)",
+      "description": "Bộ sưu tập đầy đủ và giá trị nhất với toàn bộ 3 tựa sách: Mật Mã Tỉnh Thức, Mật Mã Kết Nối, Mật Mã Tài Chính. Giải pháp hoàn hảo giúp bạn nâng cấp bản thân toàn diện.",
+      "price": 286000,
+      "original_price": 554000,
+      "pages": 495,
+      "status": "active",
+      "file_path": "/ebooks/combo-bo-ba-mat-ma.pdf",
+      "sample_read_url": "https://drive.google.com/file/d/1_Sample_ComboBoBaMatMa_FullPreview/view",
+      "badge": "Siêu ưu đãi -48%",
+      "included_books": [
+        "Mật Mã Tỉnh Thức",
+        "Mật Mã Kết Nối",
+        "Mật Mã Tài Chính"
+      ],
+      "table_of_contents": [
+        "Ebook 1: Mật Mã Tỉnh Thức (148 trang)",
+        "Ebook 2: Mật Mã Kết Nối (165 trang)",
+        "Ebook 3: Mật Mã Tài Chính (182 trang)",
+        "Quà tặng 1: File Excel Quản lý Dòng tiền Cá nhân Tự động",
+        "Quà tặng 2: Audio Book tóm tắt định dạng MP3 nghe khi lái xe",
+        "Đặc quyền: Cập nhật miễn phí trọn đời các phiên bản bổ sung"
+      ],
+      "for_whom": [
+        "Người cam kết phát triển bản thân sâu sắc, muốn sở hữu trọn vẹn bộ cẩm nang",
+        "Người muốn mức giá tối ưu nhất (tiết kiệm gần 50% so với mua lẻ từng cuốn)",
+        "Làm quà tặng ý nghĩa cho bạn bè, người thân hoặc đồng nghiệp"
+      ],
+      "not_for_whom": [
+        "Người chỉ muốn đọc lướt qua một chủ đề đơn lẻ"
+      ],
+      "themeColor": {
+        "primary": "#1d4ed8",
+        "secondary": "#1e40af",
+        "accent": "#dbeafe"
+      },
+      "image_url": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=800&q=80",
+      "image_config": {
+        "aspectRatio": "3/4",
+        "objectFit": "cover",
+        "objectPosition": "center",
+        "borderRadius": "xl",
+        "filterPreset": "cinematic",
+        "hoverEffect": "lift",
+        "overlayOpacity": 25,
+        "showBorder": true
+      }
+    }
+  ],
+  "blogs": [
+    {
+      "id": "blog_01",
+      "slug": "5-thoi-quen-buoi-sang-tinh-thuc",
+      "title": "5 Thói quen buổi sáng kích hoạt trạng thái tỉnh thức & giải phóng lo âu",
+      "excerpt": "Cách bạn bắt đầu 60 phút đầu ngày quyết định 90% hiệu suất và sự bình an nội tại. Khám phá 5 nghi thức nhỏ giúp thanh lọc tâm trí trước khi bước vào guồng quay công việc.",
+      "author": "Hoàng Nguyễn",
+      "readTime": "4 phút đọc",
+      "publishedAt": "2026-10-10",
+      "status": "published",
+      "tags": [
+        "Tỉnh Thức",
+        "Phát Triển Bản Thân",
+        "Năng Suất"
+      ],
+      "linkedProductId": "mat-ma-tinh-thuc",
+      "coverGradient": "from-sky-600 via-blue-700 to-indigo-900",
+      "content": "Trong kỷ nguyên của thông báo mạng xã hội và nhịp sống gấp gáp, hầu hết chúng ta bắt đầu ngày mới bằng việc với tay lấy điện thoại, nạp vào đầu hàng trăm tin tức giật gân và email tồn đọng. Điều này vô tình kích hoạt hệ thần kinh giao cảm (Sympathetic Nervous System), đẩy cơ thể vào trạng thái \"chiến đấu hoặc bỏ chạy\" ngay khi vừa thức giấc.\n\nDưới đây là 5 thói quen đã được đúc kết giúp bạn tái thiết lập năng lượng và neo giữ bình an:\n\n### 1. Quy tắc \"Không màn hình\" trong 30 phút đầu tiên\nHãy để não bộ chuyển đổi từ từ từ sóng não Theta sang Alpha. Dành 30 phút này cho việc uống một ly nước ấm, hít thở sâu và cảm nhận sự hiện diện của cơ thể trong không gian yên tĩnh.\n\n### 2. Ba phút quan sát hơi thở tỉnh thức\nNgồi thẳng lưng, nhắm mắt và chỉ đơn giản đếm hơi thở vào - ra. Đừng cố gắng kiểm soát nhịp thở, chỉ quan sát luồng không khí đi qua cánh mũi. Sự tĩnh lặng này là liều thuốc giải độc cho tâm trí hay bị phân tán.\n\n### 3. Viết ra 3 điều biết ơn cụ thể\nThay vì viết những điều vĩ mô, hãy biết ơn những chi tiết nhỏ: ly cà phê thơm, cơn gió mát ban sớm, hay một giấc ngủ trọn vẹn. Lòng biết ơn chuyển hóa não bộ từ trạng thái thiếu thốn (Scarcity) sang đủ đầy (Abundance).\n\n### 4. Vận động nhẹ nhàng kích hoạt tuần hoàn\n5 đến 10 phút kéo giãn cơ bắp hoặc vài động tác yoga chào mặt trời giúp đưa oxy lên não, giải phóng cortisol dư thừa tích tụ qua đêm.\n\n### 5. Xác định một \"Ưu tiên tối thượng\" trong ngày (The ONE Thing)\nĐừng lập danh sách 20 việc cần làm. Hãy tự hỏi: \"Nếu hôm nay chỉ hoàn thành đúng 1 việc để cảm thấy ngày trọn vẹn, đó là việc gì?\". Hãy giải quyết nó vào khung giờ năng lượng cao nhất.",
+      "thumbnail_url": "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=1000&q=80",
+      "image_config": {
+        "aspectRatio": "16/9",
+        "objectFit": "cover",
+        "objectPosition": "center",
+        "borderRadius": "xl",
+        "filterPreset": "warm",
+        "hoverEffect": "zoom",
+        "overlayOpacity": 35,
+        "showBorder": true
+      }
+    },
+    {
+      "id": "blog_02",
+      "slug": "nghe-thuat-lang-nghe-chu-dong",
+      "title": "Nghệ thuật lắng nghe chủ động: Bí quyết tạo thiện cảm và thấu cảm sâu sắc",
+      "excerpt": "Lắng nghe không chỉ là im lặng để chờ đến lượt mình nói. Lắng nghe thực sự là nghệ thuật bước vào thế giới quan của người khác mà không phán xét.",
+      "author": "Hoàng Nguyễn",
+      "readTime": "5 phút đọc",
+      "publishedAt": "2026-10-08",
+      "status": "published",
+      "tags": [
+        "Giao Tiếp",
+        "Mối Quan Hệ",
+        "Đàm Phán"
+      ],
+      "linkedProductId": "mat-ma-ket-noi",
+      "coverGradient": "from-blue-700 via-indigo-800 to-slate-900",
+      "content": "Nhà tâm lý học Carl Rogers từng nói: \"Khi ai đó thực sự lắng nghe bạn mà không phán xét hay cố gắng uốn nắn bạn, cảm giác đó giống như được chữa lành.\"\n\nTrong giao tiếp hàng ngày, chúng ta thường mắc bẫy \"lắng nghe để phản hồi\" thay vì \"lắng nghe để thấu hiểu\". Để trở thành một người giao tiếp tinh tế, bạn cần làm chủ 3 tầng bậc lắng nghe sau:\n\n### Tầng 1: Lắng nghe nội tâm (Internal Listening)\nỞ tầng này, sự chú ý vẫn hướng về chính bạn: \"Họ nói điều này thì mình phải đáp lại thế nào?\", \"Ý kiến của mình có hay hơn không?\". Đây là kiểu lắng nghe khiến đối phương cảm thấy xa cách.\n\n### Tầng 2: Lắng nghe tập trung (Focused Listening)\nToàn bộ năng lượng và ánh mắt của bạn hướng trọn về người đối diện. Bạn chú ý không chỉ câu từ họ nói, mà cả tốc độ giọng nói, ánh mắt ngập ngừng và những khoảng dừng hơi thở.\n\n### Tầng 3: Lắng nghe toàn cảnh & bắt sóng cảm xúc (Global Listening)\nBạn cảm nhận được bầu không khí, cảm xúc ngầm ẩn sau câu chuyện và những điều họ chưa thể diễn đạt thành lời. \n\n**Kỹ thuật thực hành ngay:**\n- **Kỹ thuật phản chiếu (Mirroring):** Lặp lại 2-3 từ khóa cuối cùng của đối phương kèm ngữ điệu tò mò, nhẹ nhàng.\n- **Xác nhận cảm xúc (Validation):** \"Nghe có vẻ như tuần qua anh đã chịu rất nhiều áp lực trong dự án đó nhỉ?\"\n- **Khoảng lặng vàng (The Golden Pause):** Đợi 2 giây sau khi họ dứt lời trước khi trả lời. Khoảng lặng này thể hiện bạn đang suy ngẫm chân thành về lời nói của họ.",
+      "thumbnail_url": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1000&q=80",
+      "image_config": {
+        "aspectRatio": "16/9",
+        "objectFit": "cover",
+        "objectPosition": "center",
+        "borderRadius": "xl",
+        "filterPreset": "cinematic",
+        "hoverEffect": "zoom",
+        "overlayOpacity": 35,
+        "showBorder": true
+      }
+    },
+    {
+      "id": "blog_03",
+      "slug": "cong-thuc-5-hu-tai-chinh-thuc-chien",
+      "title": "Mô hình phân bổ 5 hũ tài chính thông minh: Bịt kín lỗ rò rỉ dòng tiền",
+      "excerpt": "Kiếm được tiền là kỹ năng, giữ được tiền và biến tiền sinh lời là kỷ luật. Hướng dẫn phân bổ thu nhập cá nhân không cần bằng cấp kinh tế.",
+      "author": "Hoàng Nguyễn",
+      "readTime": "6 phút đọc",
+      "publishedAt": "2026-10-05",
+      "status": "published",
+      "tags": [
+        "Tài Chính Cá Nhân",
+        "Quản Lý Dòng Tiền",
+        "Đầu Tư"
+      ],
+      "linkedProductId": "mat-ma-tai-chinh",
+      "coverGradient": "from-emerald-700 via-teal-800 to-slate-900",
+      "content": "Rất nhiều người đi làm có mức lương tăng dần theo số năm kinh nghiệm, nhưng sau 5 năm nhìn lại số dư tài khoản vẫn chẳng đáng là bao. Hiện tượng này trong kinh tế học gọi là \"Lifestyle Creep\" – tiêu dùng tự động nở rộng theo thu nhập.\n\nĐể không bị cuốn vào vòng xoáy kiếm bao nhiêu tiêu hết bấy nhiêu, bạn cần thiết lập một hệ thống tự động ngay khi lương về tài khoản.\n\n### Hũ 1: Chi phí sinh hoạt thiết yếu (55%)\nTiền thuê nhà, ăn uống cơ bản, điện nước, di chuyển. Nếu chi phí thiết yếu vượt quá 60%, bạn đang sống quá giới hạn an toàn tài chính và cần rà soát cắt giảm các khoản phí ẩn.\n\n### Hũ 2: Quỹ dự phòng khẩn cấp & Bảo hiểm (10%)\nMục tiêu là tích lũy từ 3 đến 6 tháng chi phí sinh hoạt tối thiểu. Khoản tiền này gửi tiết kiệm kỳ hạn ngắn hoặc tài khoản sinh lời linh hoạt, tuyệt đối không dùng vào đầu tư mạo hiểm. Đây là lá chắn giúp bạn ngủ ngon trước mọi biến cố sa thải hay ốm đau.\n\n### Hũ 3: Đầu tư gia tăng tài sản dài hạn (15%)\nTiền mua chứng chỉ quỹ, cổ phiếu giá trị hoặc đầu tư vào chuyên môn nâng cao giá trị bản thân. Hãy nhớ nguyên tắc: \"Trả cho mình trước khi trả cho người khác\".\n\n### Hũ 4: Phát triển bản thân & Giáo dục (10%)\nSách, khóa học chất lượng, công cụ làm việc chuyên nghiệp. Đây là khoản đầu tư có tỉ suất sinh lời (ROI) cao nhất mà không thị trường nào đánh thuế được.\n\n### Hũ 5: Hưởng thụ & Cho đi (10%)\nMột bữa tối ấm cúng cùng người thương, một món quà nhỏ cho gia đình hoặc chuyến đi tái tạo năng lượng. Kỷ luật tài chính không phải là khắc khổ, mà là tận hưởng có chủ đích.",
+      "thumbnail_url": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1000&q=80",
+      "image_config": {
+        "aspectRatio": "16/9",
+        "objectFit": "cover",
+        "objectPosition": "center",
+        "borderRadius": "xl",
+        "filterPreset": "vibrant",
+        "hoverEffect": "zoom",
+        "overlayOpacity": 35,
+        "showBorder": true
+      }
+    },
+    {
+      "id": "blog_04",
+      "slug": "bo-ba-mat-ma-nang-tam-ban-than",
+      "title": "Bộ ba chuyển hóa Thân - Tâm - Trí: Lộ trình 90 ngày bứt phá toàn diện",
+      "excerpt": "Tỉnh thức định tâm, giao tiếp kết nối và tài chính vững vàng. Ba chân kiềng không thể thiếu cho bất kỳ ai muốn tự do và tự chủ trong cuộc sống.",
+      "author": "Hoàng Nguyễn",
+      "readTime": "5 phút đọc",
+      "publishedAt": "2026-10-01",
+      "status": "published",
+      "tags": [
+        "Tổng Hợp",
+        "Lộ Trình",
+        "Combo"
+      ],
+      "linkedProductId": "combo-bo-ba-mat-ma",
+      "coverGradient": "from-blue-800 via-indigo-900 to-slate-950",
+      "content": "Chúng ta thường cố gắng giải quyết một bài toán tài chính bằng cách cày cuốc nhiều hơn, nhưng lại kiệt sức vì tâm trí luôn bất an. Hoặc chúng ta có chuyên môn giỏi nhưng không thăng tiến được vì thiếu năng lực giao tiếp thấu cảm.\n\nBa khía cạnh: **Tỉnh Thức – Kết Nối – Tài Chính** thực chất là một chỉnh thể hữu cơ, tác động qua lại lẫn nhau mỗi ngày:\n\n- **Khi có Tỉnh Thức:** Bạn kiểm soát được cảm xúc, không bị cuốn vào bẫy chi tiêu vô thức (FOMO) và đưa ra quyết định sáng suốt.\n- **Khi có Kết Nối:** Bạn xây dựng được mạng lưới quan hệ chất lượng cao, mở ra những cơ hội hợp tác và gia tăng thu nhập bền vững.\n- **Khi có Tài Chính:** Bạn có được sự an tâm và tự do để tiếp tục theo đuổi những giá trị tinh thần sâu sắc mà không bị cơm áo gạo tiền ghì chặt.\n\nHãy bắt đầu lộ trình 90 ngày của bạn ngay hôm nay bằng cách xây dựng từng thói quen nhỏ nhất!",
+      "thumbnail_url": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1000&q=80",
+      "image_config": {
+        "aspectRatio": "16/9",
+        "objectFit": "cover",
+        "objectPosition": "center",
+        "borderRadius": "xl",
+        "filterPreset": "cinematic",
+        "hoverEffect": "zoom",
+        "overlayOpacity": 30,
+        "showBorder": true
+      }
+    }
+  ],
+  "orders": [
+    {
+      "id": "ord_1791961527897",
+      "orderCode": "MM1031",
+      "customerName": "dương thành nam",
+      "customerEmail": "namthanh@gmail.com",
+      "productId": "mat-ma-tai-chinh",
+      "productTitle": "Mật Mã Tài Chính",
+      "amount": 138000,
+      "originalAmount": 198000,
+      "status": "pending",
+      "createdAt": "2026-10-14T07:05:27.897Z",
+      "downloadToken": "dl_1791961527897_om0cal",
+      "emailSent": false
+    },
+    {
+      "id": "ord_1791948044594",
+      "orderCode": "MM1030",
+      "customerName": "dương thành nam",
+      "customerEmail": "namthanh1514@gmail.com",
+      "productId": "mat-ma-ket-noi",
+      "productTitle": "Mật Mã Kết Nối",
+      "amount": 128000,
+      "originalAmount": 188000,
+      "status": "need_check",
+      "createdAt": "2026-10-14T03:20:44.594Z",
+      "downloadToken": "dl_1791948044593_0ojcw3",
+      "emailSent": false,
+      "paymentDetails": {
+        "gateway": "MB",
+        "accountNumber": "5070145678888",
+        "transferAmount": 89600,
+        "referenceCode": "MB59623821",
+        "transactionId": 3378466,
+        "content": "MM1030 dương thành nam thanh toan",
+        "discrepancyNote": "Khách chuyển thiếu tiền: Thực nhận 89.600 ₫ thay vì 128.000 ₫"
+      }
+    },
+    {
+      "id": "ord_1791947830765",
+      "orderCode": "MM1029",
+      "customerName": "Nguyễn Văn Test",
+      "customerEmail": "test@example.com",
+      "productId": "combo-bo-ba-mat-ma",
+      "productTitle": "Combo Trọn Bộ Ba Mật Mã",
+      "amount": 286000,
+      "originalAmount": 554000,
+      "status": "pending",
+      "createdAt": "2026-10-14T03:17:10.765Z",
+      "downloadToken": "dl_1791947830765_l3hzn1",
+      "emailSent": false
+    },
+    {
+      "id": "ord_1791947052073",
+      "orderCode": "MM1028",
+      "customerName": "dương thành nam",
+      "customerEmail": "namthanh1514@gmail.com",
+      "productId": "mat-ma-ket-noi",
+      "productTitle": "Mật Mã Kết Nối",
+      "amount": 128000,
+      "originalAmount": 188000,
+      "status": "paid",
+      "createdAt": "2026-10-14T03:04:12.073Z",
+      "downloadToken": "dl_1791947052073_s9fe1n",
+      "emailSent": true,
+      "paidAt": "2026-10-14T03:04:27.097Z",
+      "paymentDetails": {
+        "gateway": "MB",
+        "accountNumber": "0987654321",
+        "transferAmount": 128000,
+        "referenceCode": "MB73037319",
+        "transactionId": 6624120,
+        "content": "MM1028 dương thành nam thanh toan"
+      }
+    },
+    {
+      "id": "ord_1791944485734",
+      "orderCode": "MM1027",
+      "customerName": "nguyễn đức long",
+      "customerEmail": "namthanh1514@gmail.com",
+      "productId": "combo-tinh-thuc-thinh-vuong",
+      "productTitle": "Combo Tỉnh Thức & Thịnh Vượng",
+      "amount": 219000,
+      "originalAmount": 366000,
+      "status": "pending",
+      "createdAt": "2026-10-14T02:21:25.734Z",
+      "downloadToken": "dl_1791944485734_wjhasp",
+      "emailSent": false
+    },
+    {
+      "id": "ord_1791944382466",
+      "orderCode": "MM1026",
+      "customerName": "dương thành nam",
+      "customerEmail": "namthanh1514@gmail.com",
+      "productId": "combo-thau-suot-ket-noi",
+      "productTitle": "Combo Thấu Suốt & Kết Nối",
+      "amount": 207000,
+      "originalAmount": 356000,
+      "status": "paid",
+      "createdAt": "2026-10-14T02:19:42.466Z",
+      "downloadToken": "dl_1791944382466_sxp63b",
+      "emailSent": true,
+      "paidAt": "2026-10-14T02:19:48.654Z",
+      "paymentDetails": {
+        "gateway": "MB",
+        "accountNumber": "0987654321",
+        "transferAmount": 207000,
+        "referenceCode": "MB3713212",
+        "transactionId": 3744320,
+        "content": "MM1026 dương thành nam thanh toan"
+      }
+    },
+    {
+      "id": "ord_1791943843794",
+      "orderCode": "MM1025",
+      "customerName": "Đồng Bộ Thật",
+      "customerEmail": "sync@example.com",
+      "productId": "combo-thau-suot-ket-noi",
+      "productTitle": "Combo Thấu Suốt & Kết Nối",
+      "amount": 207000,
+      "originalAmount": 356000,
+      "status": "paid",
+      "createdAt": "2026-10-14T02:10:43.794Z",
+      "downloadToken": "dl_1791943843794_b4b6yl",
+      "emailSent": true,
+      "paidAt": "2026-10-14T02:11:06.454Z",
+      "paymentDetails": {
+        "gateway": "MB",
+        "accountNumber": "0987654321",
+        "transferAmount": 207000,
+        "referenceCode": "REF_1791943866454",
+        "transactionId": 771122,
+        "content": "MM1025 Dong Bo That chuyen khoan"
+      }
+    },
+    {
+      "id": "order_seed_01",
+      "orderCode": "MM1001",
+      "customerName": "Trần Văn Hoàng",
+      "customerEmail": "hoang.tran@gmail.com",
+      "productId": "combo-bo-ba-mat-ma",
+      "productTitle": "Combo Trọn Bộ Ba Mật Mã",
+      "amount": 286000,
+      "originalAmount": 554000,
+      "status": "paid",
+      "createdAt": "2026-10-13T21:10:31.616Z",
+      "paidAt": "2026-10-14T02:15:42.371Z",
+      "downloadToken": "dl_seed_1001",
+      "emailSent": true,
+      "paymentDetails": {
+        "gateway": "MB",
+        "accountNumber": "0987654321",
+        "transferAmount": 286000,
+        "referenceCode": "MB65851941",
+        "transactionId": 5332136,
+        "content": "MM1001 Trần Văn Hoàng thanh toan"
+      }
+    }
+  ],
+  "sepayConfig": {
+    "bankCode": "MB",
+    "accountNumber": "5070145678888",
+    "accountName": "HOANG XUAN THUY",
+    "apiKey": "LXEU5BYWRCNSIM2QNEK4MGON829S73HHPMRUZVYVWI30V1JBF6ETARKDAVSSGCP0",
+    "webhookToken": "LXEU5BYWRCNSIM2QNEK4MGON829S73HHPMRUZVYVWI30V1JBF6ETARKDAVSSGCP0",
+    "webhookUrl": "/api/sepay/webhook",
+    "autoSendEmail": true,
+    "testMode": false
+  },
+  "emailLogs": [
+    {
+      "id": "email_1791947067097_7pl71",
+      "orderCode": "MM1028",
+      "toEmail": "namthanh1514@gmail.com",
+      "customerName": "dương thành nam",
+      "productTitle": "Mật Mã Kết Nối",
+      "downloadUrl": "/api/download/dl_1791947052073_s9fe1n",
+      "sentAt": "2026-10-14T03:04:27.097Z",
+      "subject": "[EBOOK STORE] Tải tài liệu ngay: Mật Mã Kết Nối (Mã đơn: MM1028)",
+      "status": "delivered"
+    },
+    {
+      "id": "email_1791944388654_w1shn",
+      "orderCode": "MM1026",
+      "toEmail": "namthanh1514@gmail.com",
+      "customerName": "dương thành nam",
+      "productTitle": "Combo Thấu Suốt & Kết Nối",
+      "downloadUrl": "/api/download/dl_1791944382466_sxp63b",
+      "sentAt": "2026-10-14T02:19:48.654Z",
+      "subject": "[EBOOK STORE] Tải tài liệu ngay: Combo Thấu Suốt & Kết Nối (Mã đơn: MM1026)",
+      "status": "delivered"
+    },
+    {
+      "id": "email_1791943866455_l8x6v",
+      "orderCode": "MM1025",
+      "toEmail": "sync@example.com",
+      "customerName": "Đồng Bộ Thật",
+      "productTitle": "Combo Thấu Suốt & Kết Nối",
+      "downloadUrl": "/api/download/dl_1791943843794_b4b6yl",
+      "sentAt": "2026-10-14T02:11:06.455Z",
+      "subject": "[EBOOK STORE] Tải tài liệu ngay: Combo Thấu Suốt & Kết Nối (Mã đơn: MM1025)",
+      "status": "delivered"
+    },
+    {
+      "id": "email_seed_01",
+      "orderCode": "MM1001",
+      "toEmail": "hoang.tran@gmail.com",
+      "customerName": "Trần Văn Hoàng",
+      "productTitle": "Combo Trọn Bộ Ba Mật Mã",
+      "downloadUrl": "/api/download/dl_seed_1001",
+      "sentAt": "2026-10-13T21:16:31.616Z",
+      "subject": "[EBOOK STORE] Tài liệu của bạn đã sẵn sàng - Combo Trọn Bộ Ba Mật Mã",
+      "status": "delivered"
+    }
+  ],
+  "supportInquiries": [],
+  "dataVersion": 23
+}

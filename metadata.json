@@ -1,0 +1,6 @@
+{
+  "name": "Ebook Store - Tri Thức Thực Chiến & SePay VietQR",
+  "description": "Nền tảng mua Ebook tinh gọn với hệ thống thanh toán tự động VietQR SePay, giao file tức thì và quản trị toàn diện.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
