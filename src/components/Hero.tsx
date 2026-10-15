@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, UserCheck, BookOpen, GraduationCap, ShieldCheck, Truck, Headphones } from 'lucide-react';
+import { ArrowRight, UserCheck, BookOpen, ShoppingCart, QrCode, Mail } from 'lucide-react';
 
 interface HeroProps {
   onExploreClick: () => void;
@@ -7,11 +7,10 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onExploreClick, onAuthorClick }) => {
-  const trustBadges = [
-    { icon: GraduationCap, title: 'Kiến thức chất lượng', desc: 'Từ các chuyên gia hàng đầu' },
-    { icon: ShieldCheck, title: 'Bảo mật tuyệt đối', desc: 'Thanh toán an toàn' },
-    { icon: Truck, title: 'Giao hàng nhanh', desc: 'Toàn quốc' },
-    { icon: Headphones, title: 'Hỗ trợ 24/7', desc: 'Luôn đồng hành cùng bạn' },
+  const processSteps = [
+    { icon: ShoppingCart, step: '1', title: 'Chọn ebook', desc: 'Bấm "Mua ngay" hoặc "Mua combo" ở ấn phẩm bạn cần.' },
+    { icon: QrCode, step: '2', title: 'Quét mã QR thanh toán', desc: 'Chuyển khoản qua SePay VietQR, hệ thống tự động đối soát.' },
+    { icon: Mail, step: '3', title: 'Nhận ebook qua email', desc: 'File PDF gửi thẳng đến hộp thư, kèm link tải ngay trên web.' },
   ];
 
   return (
@@ -54,58 +53,47 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onAuthorClick }) => 
             
 
             {/* CTAs - Inter 600-700 */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1 sm:pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 pt-1 sm:pt-2">
               <button
                 onClick={onExploreClick}
-                className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2.5 px-6 py-3.5 bg-[#2D6CDF] hover:bg-[#2560c7] text-white rounded-xl shadow-lg shadow-blue-900/40 hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer group"
-                style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 'clamp(0.875rem, 1.8vw, 1rem)' }}
+                className="w-full sm:w-auto min-h-[42px] sm:min-h-[48px] inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3.5 bg-[#2D6CDF] hover:bg-[#2560c7] text-white rounded-xl shadow-lg shadow-blue-900/40 hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer group"
+                style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 'clamp(0.8125rem, 1.6vw, 1rem)' }}
               >
                 <BookOpen className="w-4 h-4 shrink-0" />
-                <span>Xem 7 Ebook &amp; Combo</span>
+                <span>Xem Ebook &amp; Combo</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform shrink-0" />
               </button>
 
               <button
                 onClick={onAuthorClick}
-                className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-white/10 hover:bg-white/20 text-white rounded-xl border border-white/30 backdrop-blur-md transition-all cursor-pointer"
-                style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(0.875rem, 1.8vw, 1rem)' }}
+                className="w-full sm:w-auto min-h-[42px] sm:min-h-[48px] inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3.5 bg-white/10 hover:bg-white/20 text-white rounded-xl border border-white/30 backdrop-blur-md transition-all cursor-pointer"
+                style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(0.8125rem, 1.6vw, 1rem)' }}
               >
                 <UserCheck className="w-4 h-4 text-[#F0BC64] shrink-0" />
                 <span>Về tác giả</span>
               </button>
             </div>
-
-            {/* Trust highlights nhỏ */}
-            <div className="pt-2 sm:pt-3 flex flex-wrap items-center gap-3 sm:gap-6 text-[11px] sm:text-xs text-slate-300 border-t border-white/15" style={{ fontFamily: "'Inter', sans-serif", fontWeight: 500 }}>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-                <span>Thanh toán tự động VietQR</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />
-                <span>Không cần đăng ký</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#F0BC64] shrink-0" />
-                <span>Nhận PDF tức thì</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* Trust Badges với icons */}
+      {/* Process Steps - 3 bước thay thế trust badges */}
       <div className="relative border-t border-white/10 bg-[#102744]/70 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {trustBadges.map((badge, idx) => (
-              <div key={idx} className="flex items-center gap-3">
-                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center shrink-0">
-                  <badge.icon className="w-5 h-5 text-[#F0BC64]" />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+            {processSteps.map((step, idx) => (
+              <div key={idx} className="flex items-center gap-3 sm:gap-4">
+                <div className="relative shrink-0">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center">
+                    <step.icon className="w-5 h-5 text-[#F0BC64]" />
+                  </div>
+                  <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#2D6CDF] text-white text-[11px] font-bold flex items-center justify-center border-2 border-[#102744]">
+                    {step.step}
+                  </span>
                 </div>
                 <div className="min-w-0">
-                  <div className="text-xs sm:text-sm font-bold text-white leading-tight" style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600 }}>{badge.title}</div>
-                  <div className="text-[10px] sm:text-xs text-[#9CA3AF] leading-tight truncate" style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400 }}>{badge.desc}</div>
+                  <div className="text-xs sm:text-sm font-bold text-white leading-tight" style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600 }}>{step.title}</div>
+                  <div className="text-[11px] sm:text-xs text-[#9CA3AF] leading-tight" style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400 }}>{step.desc}</div>
                 </div>
               </div>
             ))}

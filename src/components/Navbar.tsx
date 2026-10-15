@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  BookOpen,
   Menu,
   X,
   ArrowRight,
@@ -120,25 +119,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Zone 3: Actions & Mobile Navigation Controls */}
+          {/* Zone 3: Mobile Navigation Controls */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {/* Nút "Mua Ebook" */}
-            <button
-              onClick={() => {
-                if (onQuickBuy) onQuickBuy();
-                else onNavigate('products');
-              }}
-              className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-bold rounded-xl shadow-md transition-all whitespace-nowrap cursor-pointer btn-dynamic-primary ${
-                isTransparent
-                  ? 'bg-white text-[#102744] hover:bg-[#C69A55] hover:text-white shadow-white/20'
-                  : 'text-white bg-blue-600 hover:bg-blue-700 shadow-blue-500/25'
-              }`}
-              aria-label="Mua Ebook"
-            >
-              <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
-              <span>Mua Ebook</span>
-            </button>
-
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -199,20 +181,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </button>
                 );
               })}
-
-              <div className="pt-3 border-t border-slate-100 flex flex-col gap-2 mt-2">
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    if (onQuickBuy) onQuickBuy();
-                    else onNavigate('products');
-                  }}
-                  className="w-full min-h-[46px] py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl text-center shadow-md shadow-blue-500/25 transition-all flex items-center justify-center gap-2 btn-dynamic-primary"
-                >
-                  <BookOpen className="w-4 h-4" />
-                  <span>Chọn &amp; Mua Ebook Ngay</span>
-                </button>
-              </div>
             </nav>
           </div>
         </div>

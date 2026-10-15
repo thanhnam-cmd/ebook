@@ -546,7 +546,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <input
                 type="password"
                 required
-                placeholder="Nhập mật khẩu (Mặc định: admin123)"
+                placeholder="Nhập mật khẩu"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 className="w-full px-4 py-3 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-center font-mono"
