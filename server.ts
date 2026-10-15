@@ -514,12 +514,15 @@ app.post('/api/sepay/webhook', async (req: Request, res: Response) => {
       await sendEbookEmail(updated, product);
     }
 
+    // Re-fetch order to reflect emailSent status updated by sendEbookEmail
+    const finalOrder = db.getOrderByCode(matchedOrder.orderCode);
+
     console.log(`[SePay Webhook] SUCCESS: Order ${matchedOrder.orderCode} paid! Ebook triggered.`);
     return res.json({
       success: true,
       status: 'paid',
       message: 'Thanh toán thành công. Đã tự động kích hoạt gửi Ebook qua email.',
-      order: updated,
+      order: finalOrder,
     });
   } else {
     // Underpaid -> Mark as NEED_CHECK & Alert admin
@@ -607,11 +610,14 @@ app.post('/api/sepay/test-webhook', async (req: Request, res: Response) => {
       await sendEbookEmail(updated, product);
     }
 
+    // Re-fetch order to reflect emailSent status updated by sendEbookEmail
+    const finalOrder = db.getOrderByCode(order.orderCode);
+
     return res.json({
       success: true,
       status: 'paid',
       message: 'Mô phỏng SePay khớp 100%: Đơn hàng đã chuyển sang trạng thái ĐÃ THANH TOÁN!',
-      order: updated,
+      order: finalOrder,
       payload: simulatedPayload,
     });
   } else {
