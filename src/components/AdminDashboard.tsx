@@ -562,10 +562,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               >
                 Mở Bảng Điều Khiển
               </button>
-
-              <div className="text-[11px] text-slate-400">
-                Gợi ý mật khẩu mẫu thử nghiệm: <span className="font-mono text-blue-600 font-bold">admin123</span>
-              </div>
             </form>
           </div>
         ) : (
@@ -736,6 +732,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             <th className="px-4 py-3">Sản phẩm</th>
                             <th className="px-4 py-3">Số tiền</th>
                             <th className="px-4 py-3">Trạng thái</th>
+                            <th className="px-4 py-3">Email</th>
                             <th className="px-4 py-3">Chi tiết chuyển khoản</th>
                             <th className="px-4 py-3 text-right">Thao tác</th>
                           </tr>
@@ -772,6 +769,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                     ? 'CẦN ĐỐI SOÁT'
                                     : 'CHỜ THANH TOÁN'}
                                 </span>
+                              </td>
+                              <td className="px-4 py-3">
+                                {order.status === 'paid' ? (
+                                  <span
+                                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold ${
+                                      order.emailSent
+                                        ? 'bg-emerald-100 text-emerald-800'
+                                        : 'bg-amber-100 text-amber-800'
+                                    }`}
+                                    title={order.emailSent ? 'Email đã được gửi đến khách hàng' : 'Email chưa được gửi — bấm Gửi lại email'}
+                                  >
+                                    {order.emailSent ? '✓ ĐÃ GỬI' : '⏳ CHƯA GỬI'}
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-300 text-[10px]">—</span>
+                                )}
                               </td>
                               <td className="px-4 py-3 text-[11px] text-slate-600">
                                 {order.paymentDetails ? (
@@ -1489,6 +1502,80 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </label>
                     </div>
 
+                    {/* SMTP Email Configuration */}
+                    <div className="mt-5 pt-5 border-t border-slate-200">
+                      <h4 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <Mail className="w-4 h-4 text-blue-600" />
+                        Cấu hình SMTP gửi email
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block font-semibold text-slate-700 mb-1 text-sm">SMTP Host</label>
+                          <input
+                            type="text"
+                            value={config.smtpHost || ''}
+                            onChange={e => setConfig({ ...config, smtpHost: e.target.value })}
+                            placeholder="smtp.gmail.com"
+                            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg font-mono text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-semibold text-slate-700 mb-1 text-sm">SMTP Port</label>
+                          <input
+                            type="number"
+                            value={config.smtpPort || 587}
+                            onChange={e => setConfig({ ...config, smtpPort: Number(e.target.value) })}
+                            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg font-mono text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-semibold text-slate-700 mb-1 text-sm">Tài khoản email</label>
+                          <input
+                            type="email"
+                            value={config.smtpUser || ''}
+                            onChange={e => setConfig({ ...config, smtpUser: e.target.value })}
+                            placeholder="your-email@gmail.com"
+                            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="block font-semibold text-slate-700 mb-1 text-sm">Mật khẩu ứng dụng</label>
+                          <input
+                            type="password"
+                            value={config.smtpPass || ''}
+                            onChange={e => setConfig({ ...config, smtpPass: e.target.value })}
+                            placeholder="••••••••"
+                            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <label className="block font-semibold text-slate-700 mb-1 text-sm">Tên người gửi (From)</label>
+                          <input
+                            type="text"
+                            value={config.smtpFrom || ''}
+                            onChange={e => setConfig({ ...config, smtpFrom: e.target.value })}
+                            placeholder="ĐĂNG TRÍ <no-reply@yourdomain.com>"
+                            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 mt-3">
+                        <input
+                          type="checkbox"
+                          id="smtpSecure"
+                          checked={config.smtpSecure ?? false}
+                          onChange={e => setConfig({ ...config, smtpSecure: e.target.checked })}
+                          className="rounded text-blue-600"
+                        />
+                        <label htmlFor="smtpSecure" className="font-medium text-slate-700 cursor-pointer text-sm">
+                          Dùng SSL (port 465)
+                        </label>
+                      </div>
+                      <p className="text-[11px] text-slate-400 mt-2">
+                        Đối với Gmail: bật "Xác minh 2 bước" rồi tạo "Mật khẩu ứng dụng". Không dùng mật khẩu đăng nhập thông thường.
+                      </p>
+                    </div>
+
                     <div className="flex items-center justify-between pt-4 border-t border-slate-100">
                       {configSaved && (
                         <span className="text-xs text-emerald-600 font-bold flex items-center gap-1">
@@ -1533,8 +1620,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             {new Date(log.sentAt).toLocaleString('vi-VN')}
                           </td>
                           <td className="px-4 py-3">
-                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                              ĐÃ GỬI TỰ ĐỘNG
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                              log.status === 'delivered'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : log.status === 'failed'
+                                ? 'bg-rose-100 text-rose-800'
+                                : 'bg-amber-100 text-amber-800'
+                            }`}>
+                              {log.status === 'delivered' ? '✓ ĐÃ GỬI' : log.status === 'failed' ? '✗ THẤT BẠI' : '⏳ ĐANG CHỜ'}
                             </span>
                           </td>
                           <td className="px-4 py-3 text-right">

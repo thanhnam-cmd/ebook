@@ -26,45 +26,80 @@ interface FaqItem {
 const FAQS: FaqItem[] = [
   {
     id: 'faq-1',
-    category: 'payment',
-    question: 'Hệ thống SePay tự động hoạt động như thế nào?',
+    category: 'delivery',
+    question: 'Tôi nên đọc cuốn nào trước?',
     answer:
-      'Khi bạn nhấn "Mua ngay", hệ thống sẽ tạo một mã đơn hàng duy nhất (ví dụ MM1024) kèm mã VietQR chứa sẵn số tài khoản MBBank, tên người nhận và số tiền chính xác. Bạn chỉ cần mở app ngân hàng bất kỳ để quét mã và chuyển tiền. Cổng SePay tự động đọc biến động số dư và kích hoạt gửi file ebook qua email trong 2-5 phút mà không cần nhân viên duyệt thủ công.',
+      'Nếu bạn hay bị cảm xúc hoặc đám đông cuốn đi, bắt đầu với Mật Mã Tỉnh Thức. Nếu bạn đang mệt vì các mối quan hệ, chọn Mật Mã Kết Nối. Nếu vấn đề lớn nhất là tiền, chọn Mật Mã Tài Chính. Nếu muốn đọc theo lộ trình, thứ tự gợi ý là Tỉnh Thức – Kết Nối – Tài Chính.',
   },
   {
     id: 'faq-2',
-    category: 'payment',
-    question: 'Nếu tôi chuyển khoản sai nội dung hoặc thiếu tiền thì sao?',
+    category: 'policy',
+    question: 'Đây có phải sách tâm lý trị liệu hay tư vấn tài chính không?',
     answer:
-      'Đừng lo lắng! Toàn bộ giao dịch đều được ghi lại trong cơ sở dữ liệu. Nếu bạn chuyển thiếu tiền hoặc quên ghi mã đơn hàng, hệ thống sẽ lưu vào mục "Cần đối soát". Bạn chỉ cần vào trang Hỗ trợ, nhập mã giao dịch hoặc chụp ảnh biên lai gửi về cho chúng tôi. Đội ngũ kỹ thuật sẽ xác nhận và gửi sách cho bạn ngay trong 15-30 phút.',
+      'Không. Sách giúp định hình tư duy và cung cấp khung tham khảo, không thay thế tư vấn của chuyên gia tâm lý, luật sư, kế toán hay cố vấn tài chính có chứng chỉ. Nếu bạn đang đau buồn kéo dài, bị bạo hành hoặc gặp khó khăn tài chính nghiêm trọng, hãy tìm đến chuyên gia trước.',
   },
   {
     id: 'faq-3',
-    category: 'delivery',
-    question: 'Tôi sẽ nhận được Ebook qua phương thức nào?',
+    category: 'policy',
+    question: 'Sách có hứa giúp tôi giàu hoặc thay đổi cuộc đời không?',
     answer:
-      'Ngay sau khi thanh toán thành công, hệ thống sẽ gửi một email tự động tới địa chỉ email bạn đã cung cấp khi mua. Email có chứa đường link tải trực tiếp định dạng PDF bản quyền chất lượng cao, đồng thời lưu trữ liên kết trọn đời để bạn có thể tải lại bất cứ khi nào đổi thiết bị.',
+      'Không. Các cuốn sách không hứa kết quả nhanh. Chúng đưa ra cách nhìn và bài tập để bạn tự áp dụng. Kết quả phụ thuộc vào việc bạn thực hành.',
   },
   {
     id: 'faq-4',
-    category: 'device',
-    question: 'Tôi có thể đọc Ebook trên điện thoại, iPad hoặc máy đọc sách Kindle không?',
+    category: 'delivery',
+    question: 'Tôi có đọc thử được không?',
     answer:
-      'Có! Tài liệu được thiết kế tối ưu hóa định dạng chuẩn PDF, có thể mở mượt mà trên iPhone, iPad, Android, máy tính Mac/Windows và các dòng máy đọc sách Kindle/Kobo/Boox. Bạn cũng có thể in ra giấy để ghi chú cá nhân.',
+      'Có. Mỗi cuốn có bản đọc thử. Bạn nên đọc thử trước khi mua.',
   },
   {
     id: 'faq-5',
-    category: 'policy',
-    question: 'Chính sách hoàn tiền của Ebook Store như thế nào?',
+    category: 'payment',
+    question: 'Tôi thanh toán bằng cách nào?',
     answer:
-      'Chúng tôi cam kết hoàn tiền 100% trong vòng 7 ngày nếu tài liệu bị lỗi kỹ thuật không thể mở hoặc nội dung hoàn toàn không trùng khớp với mục lục đã công bố. Bạn chỉ cần gửi email tới hotro@ebookstore.vn kèm mã đơn hàng.',
+      'Chuyển khoản ngân hàng bằng cách quét mã QR. Vui lòng giữ nguyên nội dung chuyển khoản để hệ thống tự đối soát tự động. Sau khi thanh toán thành công, bạn nhận file qua email.',
   },
   {
     id: 'faq-6',
     category: 'policy',
-    question: 'Tôi có được cập nhật khi sách có phiên bản mới không?',
+    question: 'Thông tin của tôi có an toàn không?',
     answer:
-      'Tất cả độc giả mua sách lẻ hoặc gói Combo đều được hưởng đặc quyền nhận bản cập nhật tái bản bổ sung hoàn toàn miễn phí trọn đời qua email đã đăng ký.',
+      'Thông tin bạn nhập chỉ được dùng để giao tài liệu và hỗ trợ đơn hàng. Chi tiết xem thêm mục Chính sách bảo mật.',
+  },
+  {
+    id: 'faq-7',
+    category: 'delivery',
+    question: 'Bao lâu tôi nhận được ebook?',
+    answer:
+      'Thông thường 2–5 phút sau khi thanh toán thành công. File được gửi tới email bạn đã nhập khi đặt hàng.',
+  },
+  {
+    id: 'faq-8',
+    category: 'delivery',
+    question: 'Tôi chưa nhận được file thì làm sao?',
+    answer:
+      'Hãy kiểm tra mục Spam/Quảng cáo trong hộp thư và xem lại email bạn đã nhập có đúng không. Nếu sau 1 giờ vẫn chưa có file, hãy liên hệ qua Zalo – gửi kèm email đặt hàng và ảnh thanh toán để được hỗ trợ.',
+  },
+  {
+    id: 'faq-9',
+    category: 'device',
+    question: 'Ebook ở định dạng nào, đọc trên thiết bị gì?',
+    answer:
+      'PDF. Bạn đọc được trên điện thoại, máy tính bảng và máy tính, không cần cài phần mềm đặc biệt.',
+  },
+  {
+    id: 'faq-10',
+    category: 'policy',
+    question: 'Tôi được dùng ebook như thế nào?',
+    answer:
+      'Bạn được đọc và sử dụng cho mục đích cá nhân. Vui lòng không sao chép để bán lại, đăng công khai hoặc chia sẻ cho người không mua.',
+  },
+  {
+    id: 'faq-11',
+    category: 'policy',
+    question: 'Sách có được cập nhật không?',
+    answer:
+      'Khi có bản cập nhật, người mua cũ được nhận miễn phí qua email.',
   },
 ];
 

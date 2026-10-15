@@ -8,34 +8,59 @@ interface FaqItem {
 
 const FAQS: FaqItem[] = [
   {
-    question: 'Tôi nhận ebook bằng cách nào?',
+    question: 'Tôi nên đọc cuốn nào trước?',
     answer:
-      'Sau khi chuyển khoản thành công và được cổng SePay xác nhận tự động, hệ thống sẽ kích hoạt gửi email chứa file PDF và link tải trực tiếp đến địa chỉ email bạn đã cung cấp. Đồng thời, ngay trên màn hình thanh toán của bạn cũng xuất hiện nút "Tải ngay file PDF" để bạn có thể mở đọc tức thì.',
+      'Nếu bạn hay bị cảm xúc hoặc đám đông cuốn đi, bắt đầu với Mật Mã Tỉnh Thức. Nếu bạn đang mệt vì các mối quan hệ, chọn Mật Mã Kết Nối. Nếu vấn đề lớn nhất là tiền, chọn Mật Mã Tài Chính. Nếu muốn đọc theo lộ trình, thứ tự gợi ý là Tỉnh Thức – Kết Nối – Tài Chính.',
   },
   {
-    question: 'Bao lâu thì tôi nhận được email?',
+    question: 'Đây có phải sách tâm lý trị liệu hay tư vấn tài chính không?',
     answer:
-      'Thông thường trong vòng từ 1 đến 3 phút sau khi giao dịch chuyển khoản thành công. Nếu quá 5 phút vẫn chưa thấy trong Hộp thư đến (Inbox), bạn vui lòng kiểm tra thêm mục Thư rác (Spam) hoặc mục Quảng cáo (Promotions), hoặc nhập mã đơn hàng tại mục Tra cứu Hỗ trợ bên dưới.',
+      'Không. Sách giúp định hình tư duy và cung cấp khung tham khảo, không thay thế tư vấn của chuyên gia tâm lý, luật sư, kế toán hay cố vấn tài chính có chứng chỉ. Nếu bạn đang đau buồn kéo dài, bị bạo hành hoặc gặp khó khăn tài chính nghiêm trọng, hãy tìm đến chuyên gia trước.',
   },
   {
-    question: 'Tôi thanh toán bằng hình thức nào?',
+    question: 'Sách có hứa giúp tôi giàu hoặc thay đổi cuộc đời không?',
     answer:
-      'Bạn chuyển khoản ngân hàng bằng cách mở ứng dụng ngân hàng bất kỳ (Vietcombank, MBBank, Techcombank, TPBank, Momo...) và quét mã VietQR hiển thị trên màn hình. Hệ thống SePay sẽ tự động điền đúng Số tài khoản, Số tiền và Cú pháp nội dung chuyển khoản bắt buộc.',
+      'Không. Các cuốn sách không hứa kết quả nhanh. Chúng đưa ra cách nhìn và bài tập để bạn tự áp dụng. Kết quả phụ thuộc vào việc bạn thực hành.',
   },
   {
-    question: 'Ebook ở định dạng nào, đọc trên thiết bị nào?',
+    question: 'Tôi có đọc thử được không?',
     answer:
-      'Ebook được đóng gói ở định dạng chuẩn PDF chất lượng cao, có thể đọc mượt mà trên mọi thiết bị: iPhone, điện thoại Android, iPad, Tablet, máy tính xách tay (Laptop/MacBook) và các loại máy đọc sách hỗ trợ PDF.',
+      'Có. Mỗi cuốn có bản đọc thử. Bạn nên đọc thử trước khi mua.',
   },
   {
-    question: 'Tôi có được hoàn tiền không?',
+    question: 'Tôi thanh toán bằng cách nào?',
     answer:
-      'Chúng tôi cam kết hoàn tiền 100% hoặc hỗ trợ đổi bản cập nhật miễn phí nếu file tài liệu bị lỗi kỹ thuật không thể mở hoặc không đầy đủ nội dung như cam kết mục lục.',
+      'Chuyển khoản ngân hàng bằng cách quét mã QR. Vui lòng giữ nguyên nội dung chuyển khoản để hệ thống tự đối soát tự động. Sau khi thanh toán thành công, bạn nhận file qua email.',
   },
   {
-    question: 'Tôi nhập sai email thì làm sao?',
+    question: 'Thông tin của tôi có an toàn không?',
     answer:
-      'Bạn chỉ cần liên hệ hỗ trợ kèm theo Mã đơn hàng (hoặc ảnh chụp giao dịch ngân hàng thành công). Đội ngũ quản trị viên sẽ kiểm tra trên hệ thống SePay và cập nhật lại email chính xác, sau đó kích hoạt gửi lại tài liệu cho bạn ngay lập tức.',
+      'Thông tin bạn nhập chỉ được dùng để giao tài liệu và hỗ trợ đơn hàng. Chi tiết xem thêm mục Chính sách bảo mật.',
+  },
+  {
+    question: 'Bao lâu tôi nhận được ebook?',
+    answer:
+      'Thông thường 2–5 phút sau khi thanh toán thành công. File được gửi tới email bạn đã nhập khi đặt hàng.',
+  },
+  {
+    question: 'Tôi chưa nhận được file thì làm sao?',
+    answer:
+      'Hãy kiểm tra mục Spam/Quảng cáo trong hộp thư và xem lại email bạn đã nhập có đúng không. Nếu sau 1 giờ vẫn chưa có file, hãy liên hệ qua Zalo – gửi kèm email đặt hàng và ảnh thanh toán để được hỗ trợ.',
+  },
+  {
+    question: 'Ebook ở định dạng nào, đọc trên thiết bị gì?',
+    answer:
+      'PDF. Bạn đọc được trên điện thoại, máy tính bảng và máy tính, không cần cài phần mềm đặc biệt.',
+  },
+  {
+    question: 'Tôi được dùng ebook như thế nào?',
+    answer:
+      'Bạn được đọc và sử dụng cho mục đích cá nhân. Vui lòng không sao chép để bán lại, đăng công khai hoặc chia sẻ cho người không mua.',
+  },
+  {
+    question: 'Sách có được cập nhật không?',
+    answer:
+      'Khi có bản cập nhật, người mua cũ được nhận miễn phí qua email.',
   },
 ];
 

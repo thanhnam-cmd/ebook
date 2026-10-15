@@ -32,7 +32,7 @@ export const AuthorPage: React.FC<AuthorPageProps> = ({ onNavigate, onQuickBuy }
           <span>Trang chủ</span>
         </button>
         <span>/</span>
-        <span className="text-slate-900 font-bold">Tác giả Hoàng Nguyễn</span>
+        <span className="text-slate-900 font-bold">Tác giả Đăng Trí</span>
       </div>
 
       {/* Main Author Hero Card - Text-only presentation */}
@@ -46,40 +46,44 @@ export const AuthorPage: React.FC<AuthorPageProps> = ({ onNavigate, onQuickBuy }
           </div>
 
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight cinematic-text">
-            Chuyển hóa nhận thức, neo giữ bình an và bứt phá nội lực
+            Hiểu mình, hiểu người, hiểu tiền bạc
           </h1>
 
           <p className="text-base sm:text-lg text-slate-700 leading-relaxed italic border-l-4 border-blue-600 pl-4 py-1.5 bg-slate-50/60 rounded-r-xl">
-            &ldquo;Tôi viết những cuốn sách này không phải để bạn tích trữ thêm thông tin, mà để bạn có thể gập sách lại và ngay lập tức đưa ra những quyết định sáng suốt hơn trong công việc và các mối quan hệ.&rdquo;
+            &ldquo;Tôi chọn cách viết thẳng, không tô vẽ và không hứa hẹn những điều phi thực tế. Mong rằng những gì tôi đã trải qua, học hỏi và đúc kết có thể giúp bạn hiểu mình rõ hơn, nhìn cuộc sống sáng suốt hơn và tránh được một vài vòng lặp không cần thiết trên hành trình của chính mình.&rdquo;
           </p>
 
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-            Chào bạn, tôi là Hoàng Nguyễn. Hơn một thập kỷ qua, tôi đã đồng hành cùng hàng nghìn độc giả, chuyên gia và người khởi nghiệp trẻ vượt qua những cơn khủng hoảng hiện sinh, giải phóng tâm trí khỏi bẫy overthinking và xây dựng nền tảng tư duy vững chắc.
+            Tôi là Đăng Trí. Tôi lớn lên giữa Sài Gòn, tốt nghiệp cử nhân kinh tế trước khi bước vào công ty của gia đình. Không lâu sau, tôi dựng thêm một doanh nghiệp riêng và đi song song hai con đường. Bề ngoài, mọi thứ trông vững vàng: công việc, gia đình và những trách nhiệm thường ngày. Nhưng phía sau đó, tôi đã trải qua nhiều năm khó khăn trong đời sống riêng, và chính những trải nghiệm ấy dần khiến tôi nhìn lại cách mình sống, cách mình suy nghĩ và cách mình đối diện với những vấn đề của cuộc đời.
           </p>
 
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-            Tôi không tin vào những khẩu hiệu kích động cảm xúc nhất thời. Mọi trang sách tôi viết đều bắt nguồn từ những chiêm nghiệm sâu sắc, trải nghiệm thương đau thực tế và phương pháp luận có thể đo lường được kết quả.
+            Áp lực tiền bạc, cách con người đối xử với nhau, cảm giác lạc mất chính mình: tôi không còn né những điều đó được nữa. Tôi bắt đầu tìm hiểu, quan sát và thử nghiệm trên chính bản thân mình và dần nhận ra rằng, để thay đổi cuộc sống, đôi khi chúng ta cần bắt đầu bằng việc hiểu rõ hơn những gì đang diễn ra bên trong mình. Tôi đặc biệt quan tâm đến tâm lý con người: vì sao chúng ta suy nghĩ, phản ứng và đưa ra những lựa chọn nhất định, vì sao có những vấn đề liên tục lặp lại dù đã nhiều lần cố gắng thay đổi.
+          </p>
+
+          <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+            Kiến thức tôi chia sẻ xuất phát từ niềm tin rằng, một đời sống tốt cần được xây dựng trên những nền móng vững chắc. Với tôi, ba nền móng đầu tiên là hiểu và làm chủ chính mình, xây dựng các mối quan hệ lành mạnh và quản lý tiền bạc có kỷ luật. Tôi không cho rằng một cuốn sách có thể giải quyết mọi vấn đề, cũng không tin rằng có một công thức phù hợp với tất cả mọi người. Điều tôi mong muốn là chia sẻ những góc nhìn, kiến thức và bài học đã được đúc kết, để bạn có thêm cơ sở nhìn nhận hoàn cảnh của mình và tự đưa ra những lựa chọn phù hợp.
           </p>
 
           {/* Stats with Animated Counters */}
           <div className="grid grid-cols-3 gap-3 sm:gap-6 pt-6 border-t border-slate-100 text-center">
             <div className="p-3 sm:p-4 bg-slate-50/80 rounded-2xl border border-slate-100 shadow-xs">
               <div className="text-2xl sm:text-4xl font-black text-blue-600 font-mono">
-                <AnimatedCounter target={10} suffix="+ Năm" duration={1800} />
+                <AnimatedCounter target={3} suffix="" duration={1200} />
               </div>
-              <div className="text-xs sm:text-sm text-slate-600 font-medium mt-1">Năm kinh nghiệm</div>
+              <div className="text-xs sm:text-sm text-slate-600 font-medium mt-1">Nền móng cốt lõi</div>
             </div>
             <div className="p-3 sm:p-4 bg-slate-50/80 rounded-2xl border border-slate-100 shadow-xs">
               <div className="text-2xl sm:text-4xl font-black text-blue-600 font-mono">
-                <AnimatedCounter target={15000} suffix="+" formatWithDots duration={2200} />
+                <AnimatedCounter target={36} suffix="" duration={1800} />
               </div>
-              <div className="text-xs sm:text-sm text-slate-600 font-medium mt-1">Độc giả tin tưởng</div>
+              <div className="text-xs sm:text-sm text-slate-600 font-medium mt-1">Chương thực chiến</div>
             </div>
             <div className="p-3 sm:p-4 bg-slate-50/80 rounded-2xl border border-slate-100 shadow-xs">
               <div className="text-2xl sm:text-4xl font-black text-blue-600 font-mono">
-                <AnimatedCounter target={99.4} decimals={1} suffix="%" duration={2000} />
+                <AnimatedCounter target={100} suffix="%" duration={1500} />
               </div>
-              <div className="text-xs sm:text-sm text-slate-600 font-medium mt-1">Đánh giá hài lòng</div>
+              <div className="text-xs sm:text-sm text-slate-600 font-medium mt-1">Tự chịu trách nhiệm</div>
             </div>
           </div>
 
@@ -156,16 +160,16 @@ export const AuthorPage: React.FC<AuthorPageProps> = ({ onNavigate, onQuickBuy }
         </div>
 
         <blockquote className="text-base sm:text-xl font-medium text-slate-200 leading-relaxed italic">
-          &ldquo;Đọc sách của tác giả Hoàng Nguyễn giống như có một người thầy thông thái ngồi trò chuyện trực tiếp bên tách cà phê. Không phán xét, không giáo điều, chỉ có sự thấu suốt và những bước đi rõ ràng để gỡ rối tâm trí.&rdquo;
+          &ldquo;Một góc nhìn mới đôi khi không lập tức giải quyết được mọi khó khăn, nhưng có thể giúp một người hiểu điều gì đang xảy ra, nhận ra những lựa chọn mình chưa từng nghĩ đến và bắt đầu thay đổi từ những điều có thể làm được.&rdquo;
         </blockquote>
 
         <div className="flex items-center gap-3 pt-2">
           <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
-            LH
+            ĐT
           </div>
           <div>
-            <div className="font-bold text-sm text-white">Lê Hoàng Long</div>
-            <div className="text-xs text-slate-400">Founder &amp; Giám đốc điều hành Startup công nghệ</div>
+            <div className="font-bold text-sm text-white">Đăng Trí</div>
+            <div className="text-xs text-slate-400">Tác giả Bộ Ba Mật Mã</div>
           </div>
         </div>
       </div>

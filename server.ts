@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import nodemailer from 'nodemailer';
 import { db } from './server/db.ts';
 import { Product, Order, EmailLog, SupportInquiry, SePayWebhookPayload, BlogPost } from './src/types.ts';
 
@@ -22,21 +23,104 @@ function generateOrderCode(): string {
   return `MM${orderCounter++}`;
 }
 
-// Helper: Simulate Sending Ebook Delivery Email
-function sendEbookEmail(order: Order, product: Product) {
+// Helper: Send Ebook Delivery Email via SMTP (nodemailer)
+async function sendEbookEmail(order: Order, product: Product) {
+  const config = db.getConfig();
+  const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
+  const downloadUrl = `${baseUrl}/api/download/${order.downloadToken}`;
+
   const emailLog: EmailLog = {
     id: `email_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
     orderCode: order.orderCode,
     toEmail: order.customerEmail,
     customerName: order.customerName,
     productTitle: product.title,
-    downloadUrl: `/api/download/${order.downloadToken}`,
+    downloadUrl,
     sentAt: new Date().toISOString(),
-    subject: `[EBOOK STORE] Tải tài liệu ngay: ${product.title} (Mã đơn: ${order.orderCode})`,
-    status: 'delivered',
+    subject: `[ĐĂNG TRÍ] Tải tài liệu ngay: ${product.title} (Mã đơn: ${order.orderCode})`,
+    status: 'pending',
   };
+
+  // Build email HTML with product name, code, and download link
+  const html = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #1e293b;">
+      <div style="background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); padding: 30px; border-radius: 12px 12px 0 0; text-align: center;">
+        <h1 style="color: #fff; margin: 0; font-size: 22px;">Cảm ơn bạn đã mua ebook!</h1>
+      </div>
+      <div style="background: #fff; padding: 30px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px;">
+        <p style="font-size: 15px; line-height: 1.6; margin: 0 0 16px;">Xin chào <strong>${order.customerName}</strong>,</p>
+        <p style="font-size: 15px; line-height: 1.6; margin: 0 0 20px;">Đơn hàng của bạn đã được xác nhận thanh toán thành công. Dưới đây là thông tin tài liệu bạn đã mua:</p>
+        <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 24px;">
+          <table style="width: 100%; font-size: 14px;">
+            <tr>
+              <td style="padding: 6px 0; color: #64748b; width: 40%;">Tên sản phẩm:</td>
+              <td style="padding: 6px 0; font-weight: 700; color: #1e293b;">${product.title}</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; color: #64748b;">Mã đơn hàng:</td>
+              <td style="padding: 6px 0; font-weight: 700; color: #2563eb; font-family: monospace;">${order.orderCode}</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; color: #64748b;">Số tiền:</td>
+              <td style="padding: 6px 0; font-weight: 700; color: #1e293b;">${order.amount.toLocaleString('vi-VN')} ₫</td>
+            </tr>
+          </table>
+        </div>
+        <div style="text-align: center; margin: 24px 0;">
+          <a href="${downloadUrl}" style="display: inline-block; background: #2563eb; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 700; font-size: 16px;">Tải ebook ngay</a>
+        </div>
+        <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin: 0;">
+          Nếu nút trên không hoạt động, hãy copy và dán link này vào trình duyệt:<br>
+          <code style="background: #f1f5f9; padding: 4px 8px; border-radius: 4px; word-break: break-all;">${downloadUrl}</code>
+        </p>
+        <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;">
+        <p style="font-size: 12px; color: #94a3b8; line-height: 1.5; margin: 0;">
+          Đây là email tự động. Vui lòng không trả lời. Nếu bạn chưa nhận được tài liệu sau 1 giờ, hãy liên hệ qua Zalo.<br>
+          © ĐĂNG TRÍ — Mật Mã tri thức thực chiến.
+        </p>
+      </div>
+    </div>
+  `;
+
+  // Try to send via SMTP if configured
+  const smtpHost = config.smtpHost || process.env.SMTP_HOST;
+  const smtpPort = config.smtpPort || Number(process.env.SMTP_PORT) || 587;
+  const smtpUser = config.smtpUser || process.env.SMTP_USER;
+  const smtpPass = config.smtpPass || process.env.SMTP_PASS;
+  const smtpFrom = config.smtpFrom || process.env.SMTP_FROM || smtpUser;
+
+  if (smtpHost && smtpUser && smtpPass) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host: smtpHost,
+        port: smtpPort,
+        secure: config.smtpSecure ?? smtpPort === 465,
+        auth: { user: smtpUser, pass: smtpPass },
+      });
+
+      await transporter.sendMail({
+        from: smtpFrom,
+        to: order.customerEmail,
+        subject: emailLog.subject,
+        html,
+      });
+
+      emailLog.status = 'delivered';
+      db.addEmailLog(emailLog);
+      db.updateOrder(order.orderCode, { emailSent: true });
+      console.log(`[Email] Sent ebook to ${order.customerEmail} for order ${order.orderCode}`);
+      return;
+    } catch (err) {
+      console.error(`[Email] SMTP send failed for order ${order.orderCode}:`, err);
+      emailLog.status = 'failed';
+    }
+  } else {
+    console.warn(`[Email] SMTP not configured. Order ${order.orderCode} marked as pending. Configure SMTP in Admin Settings or .env (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS).`);
+  }
+
+  // Fallback: log email and mark pending (admin can resend later)
   db.addEmailLog(emailLog);
-  db.updateOrder(order.orderCode, { emailSent: true });
+  db.updateOrder(order.orderCode, { emailSent: emailLog.status === 'delivered' });
 }
 
 // ==========================================
@@ -278,7 +362,7 @@ async function syncSePayTransactions() {
 
         const product = db.getProduct(matchedOrder.productId);
         if (product && sepayConfig.autoSendEmail && updated && !matchedOrder.emailSent) {
-          sendEbookEmail(updated, product);
+          await sendEbookEmail(updated, product);
         }
 
         updatedCount++;
@@ -359,7 +443,7 @@ app.get('/api/sepay/status', async (req: Request, res: Response) => {
 });
 
 // 3. SEPAY WEBHOOK INTEGRATION & AUTOMATIC RECONCILIATION
-app.post('/api/sepay/webhook', (req: Request, res: Response) => {
+app.post('/api/sepay/webhook', async (req: Request, res: Response) => {
   const payload: SePayWebhookPayload = req.body;
   const authHeader = (req.headers.authorization || '').trim();
   const sepayConfig = db.getConfig();
@@ -426,7 +510,7 @@ app.post('/api/sepay/webhook', (req: Request, res: Response) => {
 
     const product = db.getProduct(matchedOrder.productId);
     if (product && sepayConfig.autoSendEmail && updated) {
-      sendEbookEmail(updated, product);
+      await sendEbookEmail(updated, product);
     }
 
     console.log(`[SePay Webhook] SUCCESS: Order ${matchedOrder.orderCode} paid! Ebook triggered.`);
@@ -462,7 +546,7 @@ app.post('/api/sepay/webhook', (req: Request, res: Response) => {
 });
 
 // Testing Simulator for SePay Webhook
-app.post('/api/sepay/test-webhook', (req: Request, res: Response) => {
+app.post('/api/sepay/test-webhook', async (req: Request, res: Response) => {
   const { orderCode, scenario, customAmount } = req.body;
   const order = db.getOrderByCode(orderCode);
   const sepayConfig = db.getConfig();
@@ -519,7 +603,7 @@ app.post('/api/sepay/test-webhook', (req: Request, res: Response) => {
 
     const product = db.getProduct(order.productId);
     if (product && !order.emailSent && updated) {
-      sendEbookEmail(updated, product);
+      await sendEbookEmail(updated, product);
     }
 
     return res.json({
@@ -566,7 +650,7 @@ app.get('/api/admin/orders', (req: Request, res: Response) => {
   return res.json(db.getOrders());
 });
 
-app.post('/api/admin/orders/:code/approve', (req: Request, res: Response) => {
+app.post('/api/admin/orders/:code/approve', async (req: Request, res: Response) => {
   const { code } = req.params;
   const order = db.getOrderByCode(code);
   if (!order) {
@@ -590,7 +674,7 @@ app.post('/api/admin/orders/:code/approve', (req: Request, res: Response) => {
   return res.json({ success: true, order: updated });
 });
 
-app.post('/api/admin/orders/:code/resend-email', (req: Request, res: Response) => {
+app.post('/api/admin/orders/:code/resend-email', async (req: Request, res: Response) => {
   const { code } = req.params;
   const order = db.getOrderByCode(code);
   if (!order) {
@@ -599,7 +683,7 @@ app.post('/api/admin/orders/:code/resend-email', (req: Request, res: Response) =
 
   const product = db.getProduct(order.productId);
   if (product) {
-    sendEbookEmail(order, product);
+    await sendEbookEmail(order, product);
     return res.json({ success: true, message: 'Đã gửi lại email thành công' });
   }
   return res.status(400).json({ error: 'Không tìm thấy thông tin sản phẩm tương ứng' });

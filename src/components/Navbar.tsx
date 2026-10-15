@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+  BookOpen,
   Menu,
   X,
   ArrowRight,

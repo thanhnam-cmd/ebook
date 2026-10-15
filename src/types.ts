@@ -94,6 +94,12 @@ export interface SePayConfig {
   webhookUrl: string;
   autoSendEmail: boolean;
   testMode: boolean;
+  smtpHost?: string;
+  smtpPort?: number;
+  smtpUser?: string;
+  smtpPass?: string;
+  smtpFrom?: string;
+  smtpSecure?: boolean;
 }
 
 export interface EmailLog {
