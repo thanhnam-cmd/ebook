@@ -53,23 +53,23 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onAuthorClick }) => 
             
 
             {/* CTAs - Inter 600-700 */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1 sm:pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 pt-1 sm:pt-2">
               <button
                 onClick={onExploreClick}
-                className="w-full sm:w-auto min-h-[36px] sm:min-h-[44px] inline-flex items-center justify-center gap-1.5 px-3 sm:px-5 py-2 sm:py-3 bg-[#2D6CDF] hover:bg-[#2560c7] text-white rounded-lg shadow-lg shadow-blue-900/40 hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer group"
-                style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 'clamp(0.75rem, 1.4vw, 0.9375rem)' }}
+                className="w-full sm:w-auto min-h-[30px] sm:min-h-[38px] inline-flex items-center justify-center gap-1 px-2.5 sm:px-4 py-1.5 sm:py-2.5 bg-[#2D6CDF] hover:bg-[#2560c7] text-white rounded-lg shadow-lg shadow-blue-900/40 hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer group"
+                style={{ fontFamily: "'Inter', sans-serif", fontWeight: 700, fontSize: 'clamp(0.6875rem, 1.2vw, 0.875rem)' }}
               >
-                <BookOpen className="w-3.5 h-3.5 shrink-0" />
+                <BookOpen className="w-3 h-3 shrink-0" />
                 <span>Xem Ebook &amp; Combo</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform shrink-0" />
+                <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform shrink-0" />
               </button>
 
               <button
                 onClick={onAuthorClick}
-                className="w-full sm:w-auto min-h-[36px] sm:min-h-[44px] inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 sm:py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg border border-white/30 backdrop-blur-md transition-all cursor-pointer"
-                style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(0.75rem, 1.4vw, 0.9375rem)' }}
+                className="w-full sm:w-auto min-h-[30px] sm:min-h-[38px] inline-flex items-center justify-center gap-1 px-2.5 sm:px-3.5 py-1.5 sm:py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-lg border border-white/30 backdrop-blur-md transition-all cursor-pointer"
+                style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(0.6875rem, 1.2vw, 0.875rem)' }}
               >
-                <UserCheck className="w-3.5 h-3.5 text-[#F0BC64] shrink-0" />
+                <UserCheck className="w-3 h-3 text-[#F0BC64] shrink-0" />
                 <span>Về tác giả</span>
               </button>
             </div>
