@@ -526,6 +526,29 @@
   ],
   "orders": [
     {
+      "id": "ord_1792056164241",
+      "orderCode": "MM1032",
+      "customerName": "Test Khach Hang",
+      "customerEmail": "books.dangtri@gmail.com",
+      "productId": "mat-ma-tinh-thuc",
+      "productTitle": "Mật Mã Tỉnh Thức",
+      "amount": 116000,
+      "originalAmount": 168000,
+      "status": "paid",
+      "createdAt": "2026-10-15T09:22:44.241Z",
+      "downloadToken": "dl_1792056164241_f5hzwt",
+      "emailSent": false,
+      "paidAt": "2026-10-15T09:22:59.436Z",
+      "paymentDetails": {
+        "gateway": "MB",
+        "accountNumber": "5070145678888",
+        "transferAmount": 116000,
+        "referenceCode": "MB41741362",
+        "transactionId": 2093434,
+        "content": "MM1032 Test Khach Hang thanh toan"
+      }
+    },
+    {
       "id": "ord_1791961527897",
       "orderCode": "MM1031",
       "customerName": "dương thành nam",
@@ -695,6 +718,28 @@
   },
   "emailLogs": [
     {
+      "id": "email_1792056419001_6yx36",
+      "orderCode": "MM1032",
+      "toEmail": "books.dangtri@gmail.com",
+      "customerName": "Test Khach Hang",
+      "productTitle": "Mật Mã Tỉnh Thức",
+      "downloadUrl": "http://localhost:3000/api/download/dl_1792056164241_f5hzwt",
+      "sentAt": "2026-10-15T09:26:59.001Z",
+      "subject": "[ĐĂNG TRÍ] Tải tài liệu ngay: Mật Mã Tỉnh Thức (Mã đơn: MM1032)",
+      "status": "failed"
+    },
+    {
+      "id": "email_1792056179452_0bfv0",
+      "orderCode": "MM1032",
+      "toEmail": "books.dangtri@gmail.com",
+      "customerName": "Test Khach Hang",
+      "productTitle": "Mật Mã Tỉnh Thức",
+      "downloadUrl": "http://localhost:3000/api/download/dl_1792056164241_f5hzwt",
+      "sentAt": "2026-10-15T09:22:59.452Z",
+      "subject": "[ĐĂNG TRÍ] Tải tài liệu ngay: Mật Mã Tỉnh Thức (Mã đơn: MM1032)",
+      "status": "failed"
+    },
+    {
       "id": "email_1791947067097_7pl71",
       "orderCode": "MM1028",
       "toEmail": "namthanh1514@gmail.com",
@@ -740,5 +785,5 @@
     }
   ],
   "supportInquiries": [],
-  "dataVersion": 30
+  "dataVersion": 36
 }
