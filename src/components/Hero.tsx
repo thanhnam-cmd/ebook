@@ -18,10 +18,18 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onAuthorClick }) => 
     <section className="relative w-full overflow-hidden bg-[#102744]">
       {/* Hero Image - 100% hiển thị không cắt (object-contain), nền #102744 lấp khoảng trống */}
       <div className="relative w-full min-h-[380px] sm:min-h-[480px] lg:min-h-[600px]">
+        {/* Mobile & Tablet: ảnh poster dọc */}
+        <img
+          src="/assets/hero-poster.png"
+          alt="Sách trên bàn làm việc với view thành phố hoàng hôn"
+          className="lg:hidden absolute inset-0 w-full h-full object-cover"
+          loading="eager"
+        />
+        {/* Desktop: ảnh rộng gốc */}
         <img
           src="/assets/hero-books.png"
           alt="Sách trên bàn làm việc với view thành phố hoàng hôn"
-          className="absolute inset-0 w-full h-full object-contain"
+          className="hidden lg:block absolute inset-0 w-full h-full object-contain"
           loading="eager"
         />
 
