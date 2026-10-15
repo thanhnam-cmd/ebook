@@ -675,10 +675,13 @@ app.post('/api/admin/orders/:code/approve', async (req: Request, res: Response) 
 
   const product = db.getProduct(order.productId);
   if (product && !order.emailSent && updated) {
-    sendEbookEmail(updated, product);
+    await sendEbookEmail(updated, product);
   }
 
-  return res.json({ success: true, order: updated });
+  // Re-fetch order to reflect emailSent status updated by sendEbookEmail
+  const finalOrder = db.getOrderByCode(order.orderCode);
+
+  return res.json({ success: true, order: finalOrder });
 });
 
 app.post('/api/admin/orders/:code/resend-email', async (req: Request, res: Response) => {
