@@ -96,6 +96,7 @@ async function sendEbookEmail(order: Order, product: Product) {
         port: smtpPort,
         secure: config.smtpSecure ?? smtpPort === 465,
         auth: { user: smtpUser, pass: smtpPass },
+        tls: { rejectUnauthorized: false },
       });
 
       await transporter.sendMail({
