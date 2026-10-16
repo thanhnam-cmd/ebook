@@ -9,7 +9,6 @@ interface ProductsPageProps {
   initialFilter?: 'all' | 'combo' | 'single';
   onNavigate: (route: AppRoute) => void;
   onBuy: (product: Product) => void;
-  onViewDetails: (product: Product) => void;
   onSampleRead: (product: Product) => void;
 }
 
@@ -29,7 +28,6 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
   initialFilter = 'all',
   onNavigate,
   onBuy,
-  onViewDetails,
   onSampleRead,
 }) => {
   const [filterType, setFilterType] = useState<'all' | 'combo' | 'single'>(initialFilter);
@@ -169,7 +167,6 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
               <ProductCard
                 product={product}
                 onBuy={onBuy}
-                onViewDetails={onViewDetails}
                 onSampleRead={onSampleRead}
               />
             </div>

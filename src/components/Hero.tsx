@@ -1,12 +1,11 @@
 import React from 'react';
-import { ArrowRight, UserCheck, BookOpen, ShoppingCart, QrCode, Mail } from 'lucide-react';
+import { ArrowRight, BookOpen, ShoppingCart, QrCode, Mail } from 'lucide-react';
 
 interface HeroProps {
   onExploreClick: () => void;
-  onAuthorClick: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onExploreClick, onAuthorClick }) => {
+export const Hero: React.FC<HeroProps> = ({ onExploreClick }) => {
   const processSteps = [
     { icon: ShoppingCart, step: '1', title: 'Chọn ebook', desc: 'Bấm "Mua ngay" hoặc "Mua combo" ở ấn phẩm bạn cần.' },
     { icon: QrCode, step: '2', title: 'Quét mã QR thanh toán', desc: 'Chuyển khoản qua SePay VietQR, hệ thống tự động đối soát.' },
@@ -62,15 +61,6 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onAuthorClick }) => 
                 <BookOpen className="w-3 h-3 shrink-0" />
                 <span>Xem Ebook &amp; Combo</span>
                 <ArrowRight className="hidden sm:inline-flex w-3 h-3 group-hover:translate-x-1 transition-transform shrink-0" />
-              </button>
-
-              <button
-                onClick={onAuthorClick}
-                className="inline-flex items-center justify-center gap-1 px-3 sm:px-3.5 py-1.5 sm:py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-lg border border-white/30 backdrop-blur-md transition-all cursor-pointer"
-                style={{ fontFamily: "'Inter', sans-serif", fontWeight: 600, fontSize: 'clamp(0.6875rem, 1.2vw, 0.875rem)' }}
-              >
-                <UserCheck className="w-3 h-3 text-[#F0BC64] shrink-0" />
-                <span>Về tác giả</span>
               </button>
             </div>
           </div>

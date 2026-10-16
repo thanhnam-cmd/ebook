@@ -6,7 +6,7 @@ import { BookCover } from './BookCover';
 interface ProductCardProps {
   product: Product;
   onBuy: (product: Product) => void;
-  onViewDetails: (product: Product) => void;
+  onViewDetails?: (product: Product) => void;
   onSampleRead: (product: Product) => void;
 }
 
@@ -18,11 +18,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const isCombo = product.type === 'combo';
   const savings = product.original_price - product.price;
+  const canViewDetails = typeof onViewDetails === 'function';
+  const handleViewDetails = () => {
+    if (onViewDetails) {
+      onViewDetails(product);
+    }
+  };
 
   return (
     <div className="group bg-white rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden hover:-translate-y-1">
       {/* Book Cover Area */}
-      <div className="p-4 pb-2 cursor-pointer" onClick={() => onViewDetails(product)}>
+      <div
+        className={`p-4 pb-2 ${canViewDetails ? 'cursor-pointer' : ''}`}
+        onClick={canViewDetails ? handleViewDetails : undefined}
+      >
         <BookCover product={product} size="md" />
       </div>
 
@@ -42,8 +51,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
           {/* Title */}
           <h3
-            onClick={() => onViewDetails(product)}
-            className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1 cursor-pointer"
+            onClick={canViewDetails ? handleViewDetails : undefined}
+            className={`text-base sm:text-lg font-bold text-slate-900 transition-colors line-clamp-1 ${
+              canViewDetails ? 'group-hover:text-blue-600 cursor-pointer' : ''
+            }`}
           >
             {product.title}
           </h3>
@@ -83,8 +94,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             )}
           </div>
 
-          {/* Secondary Action Row: Đọc thử & Mục lục */}
-          <div className="grid grid-cols-2 gap-2">
+          {/* Secondary Action Row: Đọc thử, chỉ hiển thị chi tiết khi trang có hỗ trợ */}
+          <div className={`grid gap-2 ${canViewDetails ? 'grid-cols-2' : 'grid-cols-1'}`}>
             <button
               onClick={() => onSampleRead(product)}
               className="min-h-[38px] px-2.5 py-2 text-xs font-semibold text-blue-700 hover:text-blue-800 bg-blue-50/80 hover:bg-blue-100/80 border border-blue-200/60 rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-98"
@@ -94,13 +105,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               <span className="truncate">Đọc thử (Drive)</span>
             </button>
 
-            <button
-              onClick={() => onViewDetails(product)}
-              className="min-h-[38px] px-2.5 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-98"
-            >
-              <BookOpen className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate">Xem mục lục</span>
-            </button>
+            {canViewDetails && (
+              <button
+                onClick={handleViewDetails}
+                className="min-h-[38px] px-2.5 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-98"
+              >
+                <BookOpen className="w-3.5 h-3.5 shrink-0" />
+                <span className="truncate">Xem mục lục</span>
+              </button>
+            )}
           </div>
 
           {/* Primary Action Button: Mua ngay / Mua combo */}

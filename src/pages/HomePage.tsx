@@ -50,7 +50,6 @@ export const HomePage: React.FC<HomePageProps> = ({
       {/* 1. Cinematic Hero Section */}
       <Hero
         onExploreClick={() => onNavigate('products')}
-        onAuthorClick={() => onNavigate('author')}
       />
 
       {/* 2. Featured Best-seller Books */}
@@ -117,14 +116,6 @@ export const HomePage: React.FC<HomePageProps> = ({
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                     <span>Bao gồm đầy đủ 3 Ebook PDF bản quyền</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Tặng kèm File Excel Quản lý tài chính</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Tặng Audio Book tóm tắt MP3</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />

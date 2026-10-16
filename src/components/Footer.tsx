@@ -91,12 +91,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               Câu hỏi thường gặp
             </button>
             <button
-              onClick={() => onNavigate('support')}
-              className="hover:text-white transition-colors cursor-pointer"
-            >
-              Hỗ trợ
-            </button>
-            <button
               onClick={() => setActivePolicy('privacy')}
               className="hover:text-white transition-colors cursor-pointer"
             >

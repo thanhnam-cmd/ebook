@@ -7,9 +7,6 @@ import {
   ChevronUp,
   Search,
   MessageCircle,
-  ShieldCheck,
-  Zap,
-  ArrowRight,
 } from 'lucide-react';
 
 interface FaqPageProps {
@@ -257,15 +254,8 @@ export const FaqPage: React.FC<FaqPageProps> = ({ onNavigate }) => {
         <MessageCircle className="w-8 h-8 text-blue-600 mx-auto" />
         <h3 className="text-base font-bold text-blue-950">Chưa tìm thấy giải đáp cho vấn đề của bạn?</h3>
         <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
-          Đội ngũ hỗ trợ của chúng tôi sẵn sàng phản hồi trong vòng 15-30 phút để giúp bạn giải quyết thắc mắc hoặc kiểm tra đơn hàng.
+          Hãy gửi email về <span className="font-semibold text-slate-800">hotro@ebookstore.vn</span> kèm mã đơn hàng và ảnh thanh toán nếu bạn cần chúng tôi kiểm tra thủ công.
         </p>
-        <button
-          onClick={() => onNavigate('support')}
-          className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs sm:text-sm transition-all shadow-sm shadow-blue-500/25 inline-flex items-center gap-1.5 cursor-pointer"
-        >
-          <span>Gửi yêu cầu hỗ trợ ngay</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
       </div>
     </div>
   );

@@ -6,7 +6,6 @@ import { ProductsPage } from './pages/ProductsPage';
 import { AuthorPage } from './pages/AuthorPage';
 import { BlogPage } from './pages/BlogPage';
 import { FaqPage } from './pages/FaqPage';
-import { SupportPage } from './pages/SupportPage';
 import { AdminPage } from './pages/AdminPage';
 
 import { ProductDetailModal } from './components/ProductDetailModal';
@@ -30,7 +29,7 @@ function getInitialRoute(): AppRoute {
   if (target === 'author' || target === 'tac-gia') return 'author';
   if (target === 'blog' || target === 'bai-viet') return 'blog';
   if (target === 'faq' || target === 'cau-hoi') return 'faq';
-  if (target === 'support' || target === 'ho-tro') return 'support';
+  if (target === 'support' || target === 'ho-tro') return 'faq';
   return 'home';
 }
 
@@ -181,7 +180,7 @@ export default function App() {
     );
   }
 
-  // 2. PUBLIC STOREFRONT (Home, Products, Author, Blog, Faq, Support)
+  // 2. PUBLIC STOREFRONT (Home, Products, Author, Blog, Faq)
   return (
     <div className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-800 antialiased selection:bg-blue-600 selection:text-white relative no-scrollbar">
       {/* Universal Navbar */}
@@ -211,7 +210,6 @@ export default function App() {
             initialFilter={productFilter}
             onNavigate={navigate}
             onBuy={handleBuy}
-            onViewDetails={(p) => setSelectedProductForDetail(p)}
             onSampleRead={handleSampleRead}
           />
         )}
@@ -235,10 +233,6 @@ export default function App() {
 
         {currentRoute === 'faq' && (
           <FaqPage onNavigate={navigate} />
-        )}
-
-        {currentRoute === 'support' && (
-          <SupportPage onNavigate={navigate} />
         )}
       </main>
 

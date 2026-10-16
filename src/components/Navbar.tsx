@@ -7,11 +7,10 @@ import {
   BookCheck,
   Users,
   HelpCircle,
-  MessageSquareText,
   Home,
 } from 'lucide-react';
 
-export type AppRoute = 'home' | 'products' | 'author' | 'blog' | 'faq' | 'support' | 'admin';
+export type AppRoute = 'home' | 'products' | 'author' | 'blog' | 'faq' | 'admin';
 
 interface NavbarProps {
   currentRoute: AppRoute;
@@ -62,7 +61,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     { route: 'author', label: 'Tác giả', icon: <Users className="w-4 h-4" /> },
     { route: 'blog', label: 'Blog', icon: <BookOpen className="w-4 h-4" /> },
     { route: 'faq', label: 'Câu hỏi', icon: <HelpCircle className="w-4 h-4" /> },
-    { route: 'support', label: 'Hỗ trợ & Tra cứu', icon: <MessageSquareText className="w-4 h-4" /> },
   ];
 
   return (
