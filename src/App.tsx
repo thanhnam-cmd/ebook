@@ -6,6 +6,7 @@ import { ProductsPage } from './pages/ProductsPage';
 import { AuthorPage } from './pages/AuthorPage';
 import { BlogPage } from './pages/BlogPage';
 import { FaqPage } from './pages/FaqPage';
+import { SupportPage } from './pages/SupportPage';
 import { AdminPage } from './pages/AdminPage';
 
 import { ProductDetailModal } from './components/ProductDetailModal';
@@ -29,7 +30,7 @@ function getInitialRoute(): AppRoute {
   if (target === 'author' || target === 'tac-gia') return 'author';
   if (target === 'blog' || target === 'bai-viet') return 'blog';
   if (target === 'faq' || target === 'cau-hoi') return 'faq';
-  if (target === 'support' || target === 'ho-tro') return 'faq';
+  if (target === 'contact' || target === 'lien-he' || target === 'support' || target === 'ho-tro') return 'contact';
   return 'home';
 }
 
@@ -180,7 +181,7 @@ export default function App() {
     );
   }
 
-  // 2. PUBLIC STOREFRONT (Home, Products, Author, Blog, Faq)
+  // 2. PUBLIC STOREFRONT (Home, Products, Author, Blog, Faq, Contact)
   return (
     <div className="min-h-screen flex flex-col bg-[#f8fafc] text-slate-800 antialiased selection:bg-blue-600 selection:text-white relative no-scrollbar">
       {/* Universal Navbar */}
@@ -233,6 +234,10 @@ export default function App() {
 
         {currentRoute === 'faq' && (
           <FaqPage onNavigate={navigate} />
+        )}
+
+        {currentRoute === 'contact' && (
+          <SupportPage onNavigate={navigate} />
         )}
       </main>
 
