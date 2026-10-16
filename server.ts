@@ -83,11 +83,11 @@ async function sendEbookEmail(order: Order, product: Product) {
   `;
 
   // Try to send via SMTP if configured
-  const smtpHost = config.smtpHost || process.env.SMTP_HOST;
+  const smtpHost = (config.smtpHost || process.env.SMTP_HOST || '').trim();
   const smtpPort = config.smtpPort || Number(process.env.SMTP_PORT) || 587;
-  const smtpUser = config.smtpUser || process.env.SMTP_USER;
-  const smtpPass = config.smtpPass || process.env.SMTP_PASS;
-  const smtpFrom = config.smtpFrom || process.env.SMTP_FROM || smtpUser;
+  const smtpUser = (config.smtpUser || process.env.SMTP_USER || '').trim();
+  const smtpPass = (config.smtpPass || process.env.SMTP_PASS || '').replace(/\s+/g, '');
+  const smtpFrom = (config.smtpFrom || process.env.SMTP_FROM || smtpUser || '').trim();
 
   if (smtpHost && smtpUser && smtpPass) {
     try {
