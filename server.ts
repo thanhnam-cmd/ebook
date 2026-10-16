@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
-import { db } from './server/db.ts';
+import { db, dbReady } from './server/store.ts';
 import { Product, Order, EmailLog, SupportInquiry, SePayWebhookPayload, BlogPost } from './src/types.ts';
 
 dotenv.config();
@@ -18,7 +18,15 @@ app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
 // Helper: Generate Unique Order Code (e.g. MM1024, MM1025)
-let orderCounter = 1024 + db.getOrders().length;
+// Quét mã đơn lớn nhất đang có để tránh trùng mã sau khi khởi động lại / đổi nguồn dữ liệu.
+let orderCounter = (() => {
+  let max = 1023;
+  for (const o of db.getOrders()) {
+    const match = /^MM(\d+)$/i.exec(o.orderCode || '');
+    if (match) max = Math.max(max, parseInt(match[1], 10));
+  }
+  return max + 1;
+})();
 function generateOrderCode(): string {
   return `MM${orderCounter++}`;
 }
@@ -770,6 +778,24 @@ app.get('/api/admin/support', (req: Request, res: Response) => {
   return res.json(db.getSupportInquiries());
 });
 
+app.patch('/api/admin/support/:id', (req: Request, res: Response) => {
+  const { id } = req.params;
+  const updated = db.updateSupportInquiry(id, req.body || {});
+  if (!updated) {
+    return res.status(404).json({ error: 'Không tìm thấy yêu cầu liên hệ' });
+  }
+  return res.json({ success: true, inquiry: updated });
+});
+
+app.delete('/api/admin/support/:id', (req: Request, res: Response) => {
+  const { id } = req.params;
+  const deleted = db.deleteSupportInquiry(id);
+  if (!deleted) {
+    return res.status(404).json({ error: 'Không tìm thấy yêu cầu liên hệ' });
+  }
+  return res.json({ success: true, message: 'Đã xóa yêu cầu liên hệ' });
+});
+
 // 6. EBOOK FILE DOWNLOAD & READER API
 app.get('/api/download/:token', (req: Request, res: Response) => {
   const { token } = req.params;
@@ -839,6 +865,9 @@ app.get('/api/download/:token', (req: Request, res: Response) => {
 // VITE DEV SERVER OR STATIC PRODUCTION
 // ==========================================
 async function startServer() {
+  // Chờ dữ liệu nạp xong (đặc biệt với SQL Server) trước khi mở cổng nhận request
+  await dbReady;
+
   if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve(__dirname, 'dist')));
     app.get('*', (req: Request, res: Response) => {

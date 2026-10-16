@@ -20,13 +20,12 @@ import {
   ShieldCheck,
   Send,
   Download,
-  Play,
   FileText,
   ArrowLeft,
   Trash2,
   Image as ImageIcon,
 } from 'lucide-react';
-import { Product, Order, SePayConfig, EmailLog, BlogPost } from '../types';
+import { Product, Order, SePayConfig, EmailLog, BlogPost, SupportInquiry } from '../types';
 import { ImageDisplayCustomizer } from './ImageDisplayCustomizer';
 
 interface AdminDashboardProps {
@@ -60,7 +59,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [loginError, setLoginError] = useState('');
 
   // Active Tab
-  const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'blogs' | 'config' | 'emails' | 'tester'>('orders');
+  const [activeTab, setActiveTab] = useState<'orders' | 'products' | 'blogs' | 'config' | 'emails' | 'support'>('orders');
 
   // Blogs State
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
@@ -103,11 +102,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [isCreatingProduct, setIsCreatingProduct] = useState(false);
   const [prodForm, setProdForm] = useState<Partial<Product>>({});
 
-  // Webhook Tester State
-  const [testOrderCode, setTestOrderCode] = useState('');
-  const [testAmount, setTestAmount] = useState<number>(286000);
-  const [testScenario, setTestScenario] = useState<'exact' | 'underpaid' | 'wrong_code'>('exact');
-  const [testResponse, setTestResponse] = useState<any>(null);
+  // Support / Contact Inquiries State
+  const [supportInquiries, setSupportInquiries] = useState<SupportInquiry[]>([]);
 
   // SePay Live API Sync
   const [isSyncingSePay, setIsSyncingSePay] = useState(false);
@@ -159,12 +155,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const fetchDashboardData = async () => {
     setIsLoadingOrders(true);
     try {
-      const [ordersRes, statsRes, configRes, emailsRes, blogsRes] = await Promise.all([
+      const [ordersRes, statsRes, configRes, emailsRes, blogsRes, supportRes] = await Promise.all([
         fetch('/api/admin/orders'),
         fetch('/api/admin/stats'),
         fetch('/api/admin/config'),
         fetch('/api/admin/emails'),
         fetch('/api/blogs?all=true'),
+        fetch('/api/admin/support'),
       ]);
 
       if (ordersRes.ok) setOrders(await ordersRes.json());
@@ -172,6 +169,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       if (configRes.ok) setConfig(await configRes.json());
       if (emailsRes.ok) setEmailLogs(await emailsRes.json());
       if (blogsRes.ok) setBlogs(await blogsRes.json());
+      if (supportRes.ok) setSupportInquiries(await supportRes.json());
     } catch (err) {
       console.error('Error fetching admin data:', err);
     } finally {
@@ -435,29 +433,34 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
-  // Tester Run
-  const handleRunTester = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!testOrderCode) {
-      alert('Vui lòng chọn hoặc nhập mã đơn hàng');
-      return;
-    }
-
+  // Support Inquiry Actions
+  const handleMarkReplied = async (id: string, currentStatus: string) => {
+    const nextStatus = currentStatus === 'replied' ? 'new' : 'replied';
     try {
-      const res = await fetch('/api/sepay/test-webhook', {
-        method: 'POST',
+      const res = await fetch(`/api/admin/support/${id}`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderCode: testOrderCode,
-          scenario: testScenario,
-          customAmount: testAmount,
-        }),
+        body: JSON.stringify({ status: nextStatus }),
       });
+      if (res.ok) fetchDashboardData();
+    } catch (err) {
+      alert('Lỗi cập nhật trạng thái liên hệ');
+    }
+  };
+
+  const handleDeleteInquiry = async (id: string) => {
+    if (!confirm('Bạn có chắc chắn muốn xóa yêu cầu liên hệ này? Hành động này không thể hoàn tác.')) return;
+    try {
+      const res = await fetch(`/api/admin/support/${id}`, { method: 'DELETE' });
       const data = await res.json();
-      setTestResponse(data);
-      fetchDashboardData();
-    } catch (err: any) {
-      setTestResponse({ error: err.message });
+      if (res.ok) {
+        alert(data.message || 'Đã xóa yêu cầu liên hệ');
+        fetchDashboardData();
+      } else {
+        alert(data.error || 'Không thể xóa yêu cầu liên hệ');
+      }
+    } catch (err) {
+      alert('Lỗi xóa yêu cầu liên hệ');
     }
   };
 
@@ -700,14 +703,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </button>
 
               <button
-                onClick={() => setActiveTab('tester')}
+                onClick={() => setActiveTab('support')}
                 className={`py-3.5 px-3 text-xs font-bold border-b-2 transition-colors whitespace-nowrap cursor-pointer ${
-                  activeTab === 'tester'
+                  activeTab === 'support'
                     ? 'border-blue-600 text-blue-600'
                     : 'border-transparent text-slate-600 hover:text-slate-900'
                 }`}
               >
-                Công Cụ Test Webhook SePay
+                Phản Hồi Liên Hệ ({supportInquiries.filter(s => s.status === 'new').length})
               </button>
             </div>
 
@@ -1712,98 +1715,78 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
               )}
 
-              {/* TAB 5: WEBHOOK TESTER */}
-              {activeTab === 'tester' && (
-                <div className="max-w-2xl bg-white p-6 rounded-xl border border-slate-200 space-y-6">
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                      <Play className="w-4 h-4 text-blue-600" />
-                      <span>Công Cụ Bắn Thử Nghiệm Webhook SePay</span>
-                    </h3>
-                    <p className="text-xs text-slate-500 mt-0.5">
-                      Giúp bạn kiểm thử đối soát tự động: Khớp tiền, Lệch tiền, Sai nội dung, Gửi lặp (Idempotent).
-                    </p>
+              {/* TAB 5: QUẢN LÝ PHẢN HỒI LIÊN HỆ */}
+              {activeTab === 'support' && (
+                <div className="space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                        <Mail className="w-4 h-4 text-blue-600" />
+                        <span>Quản Lý Thông Tin Phản Hồi Liên Hệ</span>
+                      </h3>
+                      <p className="text-xs text-slate-500 mt-0.5">
+                        Tổng hợp thắc mắc khách hàng gửi từ trang Liên hệ. Đánh dấu đã phản hồi hoặc xóa khi xử lý xong.
+                      </p>
+                    </div>
+                    <span className="text-[11px] font-bold text-slate-500 whitespace-nowrap">
+                      {supportInquiries.filter(s => s.status === 'new').length} chưa phản hồi / {supportInquiries.length} tổng
+                    </span>
                   </div>
 
-                  <form onSubmit={handleRunTester} className="space-y-4 text-xs">
-                    <div>
-                      <label className="block font-bold text-slate-700 mb-1">Chọn đơn hàng thử nghiệm:</label>
-                      <select
-                        value={testOrderCode}
-                        onChange={e => {
-                          setTestOrderCode(e.target.value);
-                          const sel = orders.find(o => o.orderCode === e.target.value);
-                          if (sel) setTestAmount(sel.amount);
-                        }}
-                        className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg font-mono font-bold"
-                      >
-                        <option value="">-- Chọn một đơn hàng --</option>
-                        {orders.map(o => (
-                          <option key={o.id} value={o.orderCode}>
-                            {o.orderCode} - {o.customerName} - {o.productTitle} ({o.amount.toLocaleString('vi-VN')} ₫) - [{o.status}]
-                          </option>
-                        ))}
-                      </select>
+                  {supportInquiries.length === 0 ? (
+                    <div className="p-8 text-center text-slate-400 text-xs bg-white rounded-xl border border-slate-200">
+                      Chưa có yêu cầu liên hệ nào từ khách hàng.
                     </div>
-
-                    <div>
-                      <label className="block font-bold text-slate-700 mb-1">Kịch bản thử nghiệm:</label>
-                      <div className="grid grid-cols-3 gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setTestScenario('exact')}
-                          className={`p-2.5 rounded-lg border text-left cursor-pointer transition-colors ${
-                            testScenario === 'exact'
-                              ? 'border-emerald-500 bg-emerald-50 text-emerald-900 font-bold'
-                              : 'border-slate-200 bg-white text-slate-600'
-                          }`}
-                        >
-                          <div className="font-bold">Khớp 100%</div>
-                          <div className="text-[10px] text-slate-500 mt-0.5">Đủ tiền &amp; đúng mã đơn</div>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setTestScenario('underpaid')}
-                          className={`p-2.5 rounded-lg border text-left cursor-pointer transition-colors ${
-                            testScenario === 'underpaid'
-                              ? 'border-amber-500 bg-amber-50 text-amber-900 font-bold'
-                              : 'border-slate-200 bg-white text-slate-600'
-                          }`}
-                        >
-                          <div className="font-bold">Chuyển thiếu tiền</div>
-                          <div className="text-[10px] text-slate-500 mt-0.5">Test trạng thái need_check</div>
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setTestScenario('wrong_code')}
-                          className={`p-2.5 rounded-lg border text-left cursor-pointer transition-colors ${
-                            testScenario === 'wrong_code'
-                              ? 'border-rose-500 bg-rose-50 text-rose-900 font-bold'
-                              : 'border-slate-200 bg-white text-slate-600'
-                          }`}
-                        >
-                          <div className="font-bold">Sai cú pháp</div>
-                          <div className="text-[10px] text-slate-500 mt-0.5">Không tìm thấy mã đơn</div>
-                        </button>
-                      </div>
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg cursor-pointer transition-colors"
-                    >
-                      Bắn Payload Webhook Giả Lập
-                    </button>
-                  </form>
-
-                  {testResponse && (
-                    <div className="p-4 bg-slate-900 text-white rounded-xl space-y-2 text-xs font-mono">
-                      <div className="text-sky-400 font-bold">Phản hồi từ Server Webhook Handler:</div>
-                      <pre className="text-[11px] overflow-x-auto text-emerald-300">
-                        {JSON.stringify(testResponse, null, 2)}
-                      </pre>
+                  ) : (
+                    <div className="space-y-3">
+                      {supportInquiries.map(item => (
+                        <div key={item.id} className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5">
+                          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                            <div className="min-w-0 space-y-1">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="font-bold text-slate-900 text-sm">{item.name}</span>
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                                  item.status === 'replied'
+                                    ? 'bg-emerald-100 text-emerald-700'
+                                    : 'bg-amber-100 text-amber-700'
+                                }`}>
+                                  {item.status === 'replied' ? 'Đã phản hồi' : 'Chưa phản hồi'}
+                                </span>
+                              </div>
+                              <div className="text-xs text-slate-500 break-all">
+                                <a href={`mailto:${item.email}`} className="text-blue-600 hover:underline">
+                                  {item.email}
+                                </a>
+                                <span className="mx-1.5">·</span>
+                                <span>{new Date(item.createdAt).toLocaleString('vi-VN')}</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                              <button
+                                onClick={() => handleMarkReplied(item.id, item.status)}
+                                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-semibold transition-colors cursor-pointer ${
+                                  item.status === 'replied'
+                                    ? 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                                    : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200'
+                                }`}
+                              >
+                                <CheckCircle2 className="w-3 h-3" />
+                                <span>{item.status === 'replied' ? 'Bỏ đánh dấu' : 'Đã phản hồi'}</span>
+                              </button>
+                              <button
+                                onClick={() => handleDeleteInquiry(item.id)}
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-semibold bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 transition-colors cursor-pointer"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                                <span>Xóa</span>
+                              </button>
+                            </div>
+                          </div>
+                          <p className="mt-3 text-xs sm:text-sm text-slate-700 whitespace-pre-wrap bg-slate-50 rounded-lg p-3 border border-slate-100">
+                            {item.message}
+                          </p>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>

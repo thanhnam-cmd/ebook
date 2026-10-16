@@ -8,7 +8,6 @@ import {
   Loader2,
   Download,
   AlertTriangle,
-  Play,
   ArrowRight,
   ShieldCheck,
   RefreshCw,
@@ -21,6 +20,7 @@ interface CheckoutModalProps {
   product: Product | null;
   onClose: () => void;
   onOrderPaidSuccess?: (order: Order) => void;
+  onGoHome?: () => void;
 }
 
 type CheckoutStep = 'INFO' | 'QR' | 'SUCCESS';
@@ -29,6 +29,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   product,
   onClose,
   onOrderPaidSuccess,
+  onGoHome,
 }) => {
   const [step, setStep] = useState<CheckoutStep>('INFO');
   const [customerName, setCustomerName] = useState('');
@@ -45,10 +46,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
   // Countdown timer for Screen 2 (15 minutes)
   const [timeLeft, setTimeLeft] = useState(15 * 60);
-
-  // Simulator state
-  const [simulatorStatus, setSimulatorStatus] = useState<string | null>(null);
-  const [isSimulating, setIsSimulating] = useState(false);
 
   // Polling ref
   const pollingIntervalRef = useRef<any>(null);
@@ -145,42 +142,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     }, 1000);
     return () => clearInterval(timer);
   }, [step]);
-
-  // SePay Simulator Handlers
-  const handleSimulatePayment = async (scenario: 'exact' | 'underpaid' | 'wrong_code') => {
-    if (!currentOrder) return;
-    setIsSimulating(true);
-    setSimulatorStatus(null);
-
-    try {
-      const res = await fetch('/api/sepay/test-webhook', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderCode: currentOrder.orderCode,
-          scenario,
-        }),
-      });
-
-      const data = await res.json();
-      setSimulatorStatus(data.message);
-
-      if (data.status === 'paid') {
-        setCurrentOrder(data.order);
-        if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current);
-        setTimeout(() => {
-          setStep('SUCCESS');
-          if (onOrderPaidSuccess) onOrderPaidSuccess(data.order);
-        }, 1200);
-      } else if (data.status === 'need_check') {
-        setCurrentOrder(data.order);
-      }
-    } catch (err: any) {
-      setSimulatorStatus('Lỗi khi giả lập SePay webhook.');
-    } finally {
-      setIsSimulating(false);
-    }
-  };
 
   const formatTimer = (secs: number) => {
     const m = Math.floor(secs / 60);
@@ -446,51 +407,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 </div>
               </div>
             </div>
-
-            {/* SEPAY TESTING SIMULATOR (Very helpful for user testing without real bank transfer!) */}
-            <div className="pt-3 border-t border-slate-200">
-              <div className="p-3.5 bg-slate-900 text-white rounded-xl space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-sky-400">
-                    <Play className="w-3.5 h-3.5" />
-                    <span>Bộ Giả Lập SePay Webhook (Testing Simulator)</span>
-                  </div>
-                  <span className="text-[10px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded">
-                    Thử nghiệm tức thì
-                  </span>
-                </div>
-
-                <p className="text-[11px] text-slate-300">
-                  Bấm để mô phỏng SePay bắn webhook về máy chủ với các kịch bản đối soát:
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                  <button
-                    onClick={() => handleSimulatePayment('exact')}
-                    disabled={isSimulating}
-                    className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
-                  >
-                    {isSimulating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
-                    <span>Giả lập Khớp 100% (Thành công)</span>
-                  </button>
-
-                  <button
-                    onClick={() => handleSimulatePayment('underpaid')}
-                    disabled={isSimulating}
-                    className="px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
-                  >
-                    <AlertTriangle className="w-3.5 h-3.5" />
-                    <span>Giả lập Chuyển thiếu tiền (Lệch)</span>
-                  </button>
-                </div>
-
-                {simulatorStatus && (
-                  <div className="p-2 bg-slate-800 rounded text-[11px] text-sky-300 font-mono mt-1">
-                    {simulatorStatus}
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
         )}
 
@@ -553,7 +469,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               </a>
 
               <button
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  onGoHome?.();
+                }}
                 className="w-full sm:w-auto px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm rounded-xl transition-colors cursor-pointer"
               >
                 Về trang chủ

@@ -21,7 +21,7 @@ export interface DatabaseSchema {
   dataVersion: number;
 }
 
-class PersistentDatabase {
+export class PersistentDatabase {
   private data: DatabaseSchema;
   private listeners: ((event: { type: string; version: number }) => void)[] = [];
 
@@ -269,6 +269,20 @@ class PersistentDatabase {
     this.data.supportInquiries.unshift(inquiry);
     this.touch('support');
   }
-}
 
-export const db = new PersistentDatabase();
+  public updateSupportInquiry(id: string, updates: Partial<SupportInquiry>): SupportInquiry | null {
+    const idx = this.data.supportInquiries.findIndex(s => s.id === id);
+    if (idx === -1) return null;
+    this.data.supportInquiries[idx] = { ...this.data.supportInquiries[idx], ...updates };
+    this.touch('support');
+    return this.data.supportInquiries[idx];
+  }
+
+  public deleteSupportInquiry(id: string): SupportInquiry | null {
+    const idx = this.data.supportInquiries.findIndex(s => s.id === id);
+    if (idx === -1) return null;
+    const [deleted] = this.data.supportInquiries.splice(idx, 1);
+    this.touch('support');
+    return deleted;
+  }
+}

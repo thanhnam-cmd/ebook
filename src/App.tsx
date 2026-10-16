@@ -277,6 +277,7 @@ export default function App() {
           product={selectedProductForCheckout}
           onClose={() => setSelectedProductForCheckout(null)}
           onOrderPaidSuccess={handleOrderPaidSuccess}
+          onGoHome={() => navigate('home')}
         />
       )}
     </div>
