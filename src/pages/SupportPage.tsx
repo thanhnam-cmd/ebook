@@ -33,7 +33,41 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onNavigate }) => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
+  const handleLookup = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    const code = lookupCode.trim().toUpperCase();
+    if (!code) {
+      setLookupError('Vui lòng nhập mã đơn hàng (ví dụ: MM1024).');
+      return;
+    }
 
+    setIsSearchingOrder(true);
+    setLookupError('');
+    setFoundOrder(null);
+    setFoundProduct(null);
+
+    try {
+      const res = await fetch(`/api/sepay/check-order/${encodeURIComponent(code)}`);
+      if (res.ok) {
+        const data = await res.json();
+        setFoundOrder(data.order);
+        setFoundProduct(data.product);
+      } else {
+        const fallbackRes = await fetch(`/api/orders/${encodeURIComponent(code)}`);
+        if (fallbackRes.ok) {
+          const data = await fallbackRes.json();
+          setFoundOrder(data.order);
+          setFoundProduct(data.product);
+        } else {
+          setLookupError('Không tìm thấy đơn hàng với mã này. Vui lòng kiểm tra lại mã trên màn hình chuyển tiền hoặc trong email.');
+        }
+      }
+    } catch (err) {
+      setLookupError('Lỗi kết nối máy chủ. Vui lòng thử lại sau.');
+    } finally {
+      setIsSearchingOrder(false);
+    }
+  };
 
   const handleSubmitInquiry = async (e: React.FormEvent) => {
     e.preventDefault();
