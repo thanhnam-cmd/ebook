@@ -20,7 +20,8 @@ function parseJson<T>(value: unknown, fallback: T): T {
 
 function jsonOrNull(value: unknown): unknown {
   if (value === undefined || value === null) return null;
-  return value;
+  if (typeof value === 'string') return value;
+  return JSON.stringify(value);
 }
 
 export class PostgresDatabase {
