@@ -231,6 +231,14 @@ class PersistentDatabase {
     return this.data.orders[idx];
   }
 
+  public deleteOrder(code: string): Order | null {
+    const idx = this.data.orders.findIndex(o => o.orderCode.toLowerCase() === code.toLowerCase());
+    if (idx === -1) return null;
+    const [deleted] = this.data.orders.splice(idx, 1);
+    this.touch('orders');
+    return deleted;
+  }
+
   // --- SEPAY CONFIG ---
   public getConfig(): SePayConfig {
     return this.data.sepayConfig;

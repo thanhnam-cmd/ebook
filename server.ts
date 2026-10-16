@@ -24,7 +24,7 @@ function generateOrderCode(): string {
 }
 
 // Helper: Send Ebook Delivery Email via SMTP (nodemailer)
-async function sendEbookEmail(order: Order, product: Product) {
+async function sendEbookEmail(order: Order, product: Product): Promise<EmailLog['status']> {
   const config = db.getConfig();
   const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
   const downloadUrl = `${baseUrl}/api/download/${order.downloadToken}`;
@@ -110,7 +110,7 @@ async function sendEbookEmail(order: Order, product: Product) {
       db.addEmailLog(emailLog);
       db.updateOrder(order.orderCode, { emailSent: true });
       console.log(`[Email] Sent ebook to ${order.customerEmail} for order ${order.orderCode}`);
-      return;
+      return emailLog.status;
     } catch (err) {
       console.error(`[Email] SMTP send failed for order ${order.orderCode}:`, err);
       emailLog.status = 'failed';
@@ -122,6 +122,7 @@ async function sendEbookEmail(order: Order, product: Product) {
   // Fallback: log email and mark pending (admin can resend later)
   db.addEmailLog(emailLog);
   db.updateOrder(order.orderCode, { emailSent: emailLog.status === 'delivered' });
+  return emailLog.status;
 }
 
 // ==========================================
@@ -657,6 +658,15 @@ app.get('/api/admin/orders', (req: Request, res: Response) => {
   return res.json(db.getOrders());
 });
 
+app.delete('/api/admin/orders/:code', (req: Request, res: Response) => {
+  const { code } = req.params;
+  const deleted = db.deleteOrder(code);
+  if (!deleted) {
+    return res.status(404).json({ error: 'Không tìm thấy đơn hàng để xóa' });
+  }
+  return res.json({ success: true, message: `Đã xóa đơn hàng ${code}` });
+});
+
 app.post('/api/admin/orders/:code/approve', async (req: Request, res: Response) => {
   const { code } = req.params;
   const order = db.getOrderByCode(code);
@@ -693,8 +703,14 @@ app.post('/api/admin/orders/:code/resend-email', async (req: Request, res: Respo
 
   const product = db.getProduct(order.productId);
   if (product) {
-    await sendEbookEmail(order, product);
-    return res.json({ success: true, message: 'Đã gửi lại email thành công' });
+    const status = await sendEbookEmail(order, product);
+    if (status === 'delivered') {
+      return res.json({ success: true, message: 'Đã gửi lại email thành công' });
+    }
+    if (status === 'pending') {
+      return res.status(400).json({ error: 'SMTP chưa được cấu hình đầy đủ. Hãy kiểm tra lại phần cài đặt email.' });
+    }
+    return res.status(500).json({ error: 'Không thể gửi lại email. Hãy kiểm tra SMTP hoặc thử lại sau.' });
   }
   return res.status(400).json({ error: 'Không tìm thấy thông tin sản phẩm tương ứng' });
 });

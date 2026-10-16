@@ -23,6 +23,7 @@ import {
   Play,
   FileText,
   ArrowLeft,
+  Trash2,
   Image as ImageIcon,
 } from 'lucide-react';
 import { Product, Order, SePayConfig, EmailLog, BlogPost } from '../types';
@@ -232,18 +233,39 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const handleResendEmail = async (code: string) => {
     try {
       const res = await fetch(`/api/admin/orders/${code}/resend-email`, { method: 'POST' });
+      const data = await res.json();
       if (res.ok) {
-        alert('Đã gửi lại email thành công!');
+        alert(data.message || 'Đã gửi lại email thành công!');
         fetchDashboardData();
+      } else {
+        alert(data.error || 'Không thể gửi lại email.');
       }
     } catch (err) {
       alert('Lỗi gửi email');
     }
   };
 
+  const handleDeleteOrder = async (code: string) => {
+    if (!confirm(`Bạn có chắc chắn muốn xóa khách hàng/đơn hàng ${code}? Hành động này không thể hoàn tác.`)) return;
+    try {
+      const res = await fetch(`/api/admin/orders/${code}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message || 'Đã xóa đơn hàng thành công!');
+        fetchDashboardData();
+      } else {
+        alert(data.error || 'Không thể xóa đơn hàng.');
+      }
+    } catch (err) {
+      alert('Lỗi xóa đơn hàng');
+    }
+  };
+
   // Product Actions
   const handleToggleProductStatus = async (product: Product) => {
     const newStatus = product.status === 'active' ? 'hidden' : 'active';
+    const actionLabel = newStatus === 'hidden' ? 'ẩn' : 'mở bán lại';
+    if (!confirm(`Bạn có chắc chắn muốn ${actionLabel} sản phẩm "${product.title}"?`)) return;
     try {
       const res = await fetch(`/api/products/${product.id}`, {
         method: 'PUT',
@@ -258,12 +280,34 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
+  const handleDeleteProduct = async (product: Product) => {
+    if (!confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${product.title}"? Sản phẩm sẽ được chuyển sang trạng thái ẩn.`)) return;
+    try {
+      const res = await fetch(`/api/products/${product.id}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        onRefreshProducts();
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Lỗi xóa sản phẩm');
+      }
+    } catch (err) {
+      alert('Lỗi xóa sản phẩm');
+    }
+  };
+
   const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prodForm.title || !prodForm.price) {
       alert('Vui lòng nhập tên và giá');
       return;
     }
+
+    const confirmMessage = isCreatingProduct
+      ? `Bạn có chắc chắn muốn tạo sản phẩm "${prodForm.title}"?`
+      : `Bạn có chắc chắn muốn lưu thay đổi cho sản phẩm "${prodForm.title}"?`;
+    if (!confirm(confirmMessage)) return;
 
     try {
       if (isCreatingProduct) {
@@ -838,6 +882,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                     </a>
                                   </>
                                 )}
+                                <button
+                                  onClick={() => handleDeleteOrder(order.orderCode)}
+                                  className="inline-flex items-center gap-1 px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded text-[11px] font-semibold transition-colors cursor-pointer"
+                                  title="Xóa khách hàng / đơn hàng"
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                  <span>Xóa</span>
+                                </button>
                               </td>
                             </tr>
                           ))}
@@ -1130,6 +1182,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 }`}
                               >
                                 {p.status === 'active' ? 'Ẩn sách' : 'Mở bán'}
+                              </button>
+                              <button
+                                onClick={() => handleDeleteProduct(p)}
+                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold cursor-pointer text-rose-700 bg-rose-50 hover:bg-rose-100"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                                <span>Xóa</span>
                               </button>
                             </td>
                           </tr>
