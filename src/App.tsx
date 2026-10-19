@@ -37,8 +37,9 @@ function getInitialRoute(): AppRoute {
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState<AppRoute>(getInitialRoute);
   const [productFilter, setProductFilter] = useState<'all' | 'combo' | 'single'>('all');
-  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
-  const [blogs, setBlogs] = useState<BlogPost[]>(INITIAL_BLOGS);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   // Modals state
   const [selectedProductForCheckout, setSelectedProductForCheckout] = useState<Product | null>(null);
@@ -46,8 +47,9 @@ export default function App() {
   const [selectedProductForSampleRead, setSelectedProductForSampleRead] = useState<Product | null>(null);
   const [selectedBlogForDetail, setSelectedBlogForDetail] = useState<BlogPost | null>(null);
 
-  // Trigger 250px Scroll Reveal observer on route or data changes
-  useScrollReveal(currentRoute);
+  // Trigger Scroll Reveal observer on route or data changes
+  // We include products/blogs lengths to re-observe elements when data arrives from API
+  useScrollReveal(`${currentRoute}-${products.length}-${blogs.length}`);
 
   // Synchronize Browser History & Popstate (Back/Forward buttons)
   useEffect(() => {
@@ -151,6 +153,8 @@ export default function App() {
       }
     } catch (err) {
       console.error('Error loading data:', err);
+    } finally {
+      setIsInitialLoading(false);
     }
   };
 
@@ -188,11 +192,18 @@ export default function App() {
       <Navbar
         currentRoute={currentRoute}
         onNavigate={navigate}
-        onQuickBuy={() => handleBuy(products[0])}
+        onQuickBuy={() => products.length > 0 && handleBuy(products[0])}
       />
 
+      {/* Initial Loading Spinner */}
+      {isInitialLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#f8fafc]">
+          <div className="w-10 h-10 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
+        </div>
+      )}
+
       {/* Main Page Content */}
-      <main className={`flex-1 ${currentRoute === 'home' ? '' : 'pt-16 sm:pt-[4.5rem]'}`}>
+      <main className={`flex-1 ${currentRoute === 'home' ? '' : 'pt-16 sm:pt-[4.5rem]'} transition-opacity duration-500 ${isInitialLoading ? 'opacity-0' : 'opacity-100'}`}>
         {currentRoute === 'home' && (
           <HomePage
             products={products}
