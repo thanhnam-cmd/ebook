@@ -104,6 +104,7 @@ CREATE TABLE IF NOT EXISTS products (
   sample_read_url TEXT,
   sample_drive_url TEXT,
   theme_color JSONB,
+  display_order INTEGER DEFAULT 0,
   updated_at TIMESTAMPTZ
 );
 
@@ -122,6 +123,7 @@ CREATE TABLE IF NOT EXISTS blogs (
   status TEXT,
   tags JSONB,
   linked_product_id TEXT,
+  display_order INTEGER DEFAULT 0,
   updated_at TIMESTAMPTZ
 );
 
@@ -210,8 +212,8 @@ CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
     if (!this.pool) return;
 
     const [prodRes, blogRes, orderRes, emailRes, cfgRes, supRes] = await Promise.all([
-      this.pool.query('SELECT * FROM products'),
-      this.pool.query('SELECT * FROM blogs'),
+      this.pool.query('SELECT * FROM products ORDER BY display_order ASC, id ASC'),
+      this.pool.query('SELECT * FROM blogs ORDER BY display_order ASC, published_at DESC'),
       this.pool.query('SELECT * FROM orders ORDER BY created_at DESC NULLS LAST'),
       this.pool.query('SELECT * FROM email_logs ORDER BY sent_at DESC NULLS LAST'),
       this.pool.query('SELECT * FROM sepay_config WHERE id = 1'),
@@ -268,6 +270,7 @@ CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
       included_books: parseJson(r.included_books, undefined as any),
       sample_read_url: r.sample_read_url ?? undefined,
       sampleDriveUrl: r.sample_drive_url ?? undefined,
+      display_order: Number(r.display_order || 0),
       themeColor: parseJson(r.theme_color, undefined as any),
     };
   }
@@ -288,6 +291,7 @@ CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
       status: r.status || 'draft',
       tags: parseJson(r.tags, [] as string[]),
       linkedProductId: r.linked_product_id ?? undefined,
+      display_order: Number(r.display_order || 0),
     };
   }
 
@@ -359,11 +363,11 @@ CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
       `INSERT INTO products (
         id, title, slug, type, tagline, description, price, original_price, pages, status,
         file_path, badge, image_url, image_config, table_of_contents, for_whom, not_for_whom,
-        included_books, sample_read_url, sample_drive_url, theme_color, updated_at
+        included_books, sample_read_url, sample_drive_url, theme_color, display_order, updated_at
       ) VALUES (
         $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,
         $11,$12,$13,$14,$15,$16,$17,
-        $18,$19,$20,$21,$22
+        $18,$19,$20,$21,$22,$23
       )
       ON CONFLICT (id) DO UPDATE SET
         title=EXCLUDED.title,
@@ -386,6 +390,7 @@ CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
         sample_read_url=EXCLUDED.sample_read_url,
         sample_drive_url=EXCLUDED.sample_drive_url,
         theme_color=EXCLUDED.theme_color,
+        display_order=EXCLUDED.display_order,
         updated_at=EXCLUDED.updated_at;`,
       [
         p.id,
@@ -409,6 +414,7 @@ CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
         p.sample_read_url ?? null,
         p.sampleDriveUrl ?? null,
         jsonOrNull(p.themeColor),
+        Number(p.display_order || 0),
         new Date().toISOString(),
       ],
     );
@@ -418,10 +424,10 @@ CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
     this.run(
       `INSERT INTO blogs (
         id, slug, title, excerpt, content, author, thumbnail_url, image_config, cover_gradient,
-        read_time, published_at, status, tags, linked_product_id, updated_at
+        read_time, published_at, status, tags, linked_product_id, display_order, updated_at
       ) VALUES (
         $1,$2,$3,$4,$5,$6,$7,$8,$9,
-        $10,$11,$12,$13,$14,$15
+        $10,$11,$12,$13,$14,$15,$16
       )
       ON CONFLICT (id) DO UPDATE SET
         slug=EXCLUDED.slug,
@@ -437,6 +443,7 @@ CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
         status=EXCLUDED.status,
         tags=EXCLUDED.tags,
         linked_product_id=EXCLUDED.linked_product_id,
+        display_order=EXCLUDED.display_order,
         updated_at=EXCLUDED.updated_at;`,
       [
         b.id,
@@ -450,9 +457,10 @@ CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
         b.coverGradient ?? null,
         b.readTime ?? null,
         b.publishedAt ?? null,
-        b.status ?? null,
+        b.status ?? 'draft',
         jsonOrNull(b.tags ?? []),
         b.linkedProductId ?? null,
+        Number(b.display_order || 0),
         new Date().toISOString(),
       ],
     );
@@ -647,6 +655,38 @@ CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
     return this.updateProduct(id, { status: 'hidden' });
   }
 
+  public async reorderProducts(ids: string[]): Promise<boolean> {
+    if (!this.pool) return false;
+    try {
+      // Update in-memory first for immediate sync
+      const newProducts: Product[] = [];
+      ids.forEach((id, index) => {
+        const p = this.data.products.find(x => x.id === id);
+        if (p) {
+          p.display_order = index;
+          newProducts.push(p);
+        }
+      });
+      this.data.products.forEach(p => {
+        if (!ids.includes(p.id)) {
+          p.display_order = newProducts.length;
+          newProducts.push(p);
+        }
+      });
+      this.data.products = newProducts;
+
+      // Update in DB
+      for (let i = 0; i < ids.length; i++) {
+        this.run('UPDATE products SET display_order = $1 WHERE id = $2', [i, ids[i]]);
+      }
+      this.touch('products');
+      return true;
+    } catch (err) {
+      console.error('[DB] Reorder products error:', err);
+      return false;
+    }
+  }
+
   public getBlogs(showAll = false): BlogPost[] {
     if (showAll) return this.data.blogs;
     return this.data.blogs.filter((b) => b.status === 'published');
@@ -679,6 +719,36 @@ CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
     this.run('DELETE FROM blogs WHERE id = $1;', [id]);
     this.touch('blogs');
     return true;
+  }
+
+  public async reorderBlogs(ids: string[]): Promise<boolean> {
+    if (!this.pool) return false;
+    try {
+      const newBlogs: BlogPost[] = [];
+      ids.forEach((id, index) => {
+        const b = this.data.blogs.find(x => x.id === id);
+        if (b) {
+          b.display_order = index;
+          newBlogs.push(b);
+        }
+      });
+      this.data.blogs.forEach(b => {
+        if (!ids.includes(b.id)) {
+          b.display_order = newBlogs.length;
+          newBlogs.push(b);
+        }
+      });
+      this.data.blogs = newBlogs;
+
+      for (let i = 0; i < ids.length; i++) {
+        this.run('UPDATE blogs SET display_order = $1 WHERE id = $2', [i, ids[i]]);
+      }
+      this.touch('blogs');
+      return true;
+    } catch (err) {
+      console.error('[DB] Reorder blogs error:', err);
+      return false;
+    }
   }
 
   public getOrders(): Order[] {

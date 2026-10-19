@@ -40,9 +40,9 @@ export class PersistentDatabase {
         const parsed = JSON.parse(raw);
         console.log(`[Database] Loaded persistent data from ${DB_FILE}`);
         return {
-          products: parsed.products || [...INITIAL_PRODUCTS],
-          blogs: parsed.blogs || [...INITIAL_BLOGS],
-          orders: parsed.orders || [],
+      products: (parsed.products || [...INITIAL_PRODUCTS]).sort((a: any, b: any) => (a.display_order || 0) - (b.display_order || 0)),
+      blogs: (parsed.blogs || [...INITIAL_BLOGS]).sort((a: any, b: any) => (a.display_order || 0) - (b.display_order || 0)),
+      orders: parsed.orders || [],
           sepayConfig: parsed.sepayConfig || { ...INITIAL_SEPAY_CONFIG },
           emailLogs: parsed.emailLogs || [],
           supportInquiries: parsed.supportInquiries || [],
@@ -172,6 +172,25 @@ export class PersistentDatabase {
     return this.updateProduct(id, { status: 'hidden' });
   }
 
+  public async reorderProducts(ids: string[]): Promise<boolean> {
+    const newProducts: Product[] = [];
+    ids.forEach((id, index) => {
+      const p = this.data.products.find(x => x.id === id);
+      if (p) {
+        newProducts.push({ ...p, display_order: index });
+      }
+    });
+    // Add any remaining products that were not in the reorder list
+    this.data.products.forEach(p => {
+      if (!ids.includes(p.id)) {
+        newProducts.push({ ...p, display_order: newProducts.length });
+      }
+    });
+    this.data.products = newProducts;
+    this.touch('products');
+    return true;
+  }
+
   // --- BLOGS ---
   public getBlogs(showAll = false): BlogPost[] {
     if (showAll) return this.data.blogs;
@@ -200,6 +219,24 @@ export class PersistentDatabase {
     const idx = this.data.blogs.findIndex(b => b.id === id);
     if (idx === -1) return false;
     this.data.blogs.splice(idx, 1);
+    this.touch('blogs');
+    return true;
+  }
+
+  public async reorderBlogs(ids: string[]): Promise<boolean> {
+    const newBlogs: BlogPost[] = [];
+    ids.forEach((id, index) => {
+      const b = this.data.blogs.find(x => x.id === id);
+      if (b) {
+        newBlogs.push({ ...b, display_order: index });
+      }
+    });
+    this.data.blogs.forEach(b => {
+      if (!ids.includes(b.id)) {
+        newBlogs.push({ ...b, display_order: newBlogs.length });
+      }
+    });
+    this.data.blogs = newBlogs;
     this.touch('blogs');
     return true;
   }

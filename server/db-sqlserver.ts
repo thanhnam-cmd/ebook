@@ -117,8 +117,12 @@ CREATE TABLE dbo.products (
   sample_read_url NVARCHAR(1000) NULL,
   sample_drive_url NVARCHAR(1000) NULL,
   theme_color NVARCHAR(MAX) NULL,
+  display_order INT NOT NULL DEFAULT 0,
   updated_at NVARCHAR(50) NULL
 );
+
+IF COL_LENGTH('dbo.products', 'display_order') IS NULL
+  ALTER TABLE dbo.products ADD display_order INT NOT NULL DEFAULT 0;
 
 IF OBJECT_ID('dbo.blogs', 'U') IS NULL
 CREATE TABLE dbo.blogs (
@@ -136,8 +140,12 @@ CREATE TABLE dbo.blogs (
   [status] NVARCHAR(20) NULL,
   tags NVARCHAR(MAX) NULL,
   linked_product_id NVARCHAR(100) NULL,
+  display_order INT NOT NULL DEFAULT 0,
   updated_at NVARCHAR(50) NULL
 );
+
+IF COL_LENGTH('dbo.blogs', 'display_order') IS NULL
+  ALTER TABLE dbo.blogs ADD display_order INT NOT NULL DEFAULT 0;
 
 IF OBJECT_ID('dbo.orders', 'U') IS NULL
 CREATE TABLE dbo.orders (
@@ -243,11 +251,11 @@ IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name='FK_orders_products')
     if (!this.pool) return;
 
     const [prodRes, blogRes, orderRes, emailRes, cfgRes, supRes] = await Promise.all([
-      this.pool.request().query('SELECT * FROM dbo.products'),
-      this.pool.request().query('SELECT * FROM dbo.blogs'),
+      this.pool.request().query('SELECT * FROM dbo.products ORDER BY display_order ASC, id ASC'),
+      this.pool.request().query('SELECT * FROM dbo.blogs ORDER BY display_order ASC, published_at DESC'),
       this.pool.request().query('SELECT * FROM dbo.orders ORDER BY created_at DESC'),
       this.pool.request().query('SELECT * FROM dbo.email_logs ORDER BY sent_at DESC'),
-      this.pool.request().query('SELECT * FROM dbo.sepay_config WHERE id = 1'),
+      this.pool.request().query('SELECT * FROM dbo.sepay_config WHERE id=1'),
       this.pool.request().query('SELECT * FROM dbo.support_inquiries ORDER BY created_at DESC'),
     ]);
 
@@ -300,6 +308,7 @@ IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name='FK_orders_products')
       included_books: parseJson(r.included_books, undefined as any),
       sample_read_url: r.sample_read_url ?? undefined,
       sampleDriveUrl: r.sample_drive_url ?? undefined,
+      display_order: Number(r.display_order || 0),
       themeColor: parseJson(r.theme_color, undefined as any),
     };
   }
@@ -320,6 +329,7 @@ IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name='FK_orders_products')
       status: r.status || 'draft',
       tags: parseJson(r.tags, [] as string[]),
       linkedProductId: r.linked_product_id ?? undefined,
+      display_order: Number(r.display_order || 0),
     };
   }
 
@@ -629,6 +639,39 @@ IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name='FK_orders_products')
     return this.updateProduct(id, { status: 'hidden' });
   }
 
+  public async reorderProducts(ids: string[]): Promise<boolean> {
+    if (!this.pool) return false;
+    try {
+      const newProducts: Product[] = [];
+      ids.forEach((id, index) => {
+        const p = this.data.products.find(x => x.id === id);
+        if (p) {
+          p.display_order = index;
+          newProducts.push(p);
+        }
+      });
+      this.data.products.forEach(p => {
+        if (!ids.includes(p.id)) {
+          p.display_order = newProducts.length;
+          newProducts.push(p);
+        }
+      });
+      this.data.products = newProducts;
+
+      for (let i = 0; i < ids.length; i++) {
+        await this.pool.request()
+          .input('display_order', sql.Int, i)
+          .input('id', sql.NVarChar(100), ids[i])
+          .query('UPDATE dbo.products SET display_order = @display_order WHERE id = @id');
+      }
+      this.touch('products');
+      return true;
+    } catch (err) {
+      console.error('[DB] Reorder products error:', err);
+      return false;
+    }
+  }
+
   // --- BLOGS ---
   public getBlogs(showAll = false): BlogPost[] {
     if (showAll) return this.data.blogs;
@@ -655,13 +698,48 @@ IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name='FK_orders_products')
     return this.data.blogs[idx];
   }
 
-  public deleteBlog(id: string): boolean {
+  public async deleteBlog(id: string): Promise<boolean> {
     const idx = this.data.blogs.findIndex((b) => b.id === id);
     if (idx === -1) return false;
     this.data.blogs.splice(idx, 1);
-    this.run('DELETE FROM dbo.blogs WHERE id=@id;', { id: { type: sql.NVarChar(100), value: id } });
+    if (this.pool) {
+      await this.pool.request().input('id', sql.NVarChar(100), id).query('DELETE FROM dbo.blogs WHERE id = @id');
+    }
     this.touch('blogs');
     return true;
+  }
+
+  public async reorderBlogs(ids: string[]): Promise<boolean> {
+    if (!this.pool) return false;
+    try {
+      const newBlogs: BlogPost[] = [];
+      ids.forEach((id, index) => {
+        const b = this.data.blogs.find(x => x.id === id);
+        if (b) {
+          b.display_order = index;
+          newBlogs.push(b);
+        }
+      });
+      this.data.blogs.forEach(b => {
+        if (!ids.includes(b.id)) {
+          b.display_order = newBlogs.length;
+          newBlogs.push(b);
+        }
+      });
+      this.data.blogs = newBlogs;
+
+      for (let i = 0; i < ids.length; i++) {
+        await this.pool.request()
+          .input('display_order', sql.Int, i)
+          .input('id', sql.NVarChar(100), ids[i])
+          .query('UPDATE dbo.blogs SET display_order = @display_order WHERE id = @id');
+      }
+      this.touch('blogs');
+      return true;
+    } catch (err) {
+      console.error('[DB] Reorder blogs error:', err);
+      return false;
+    }
   }
 
   // --- ORDERS ---

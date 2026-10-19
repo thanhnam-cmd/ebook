@@ -105,6 +105,32 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   // Support / Contact Inquiries State
   const [supportInquiries, setSupportInquiries] = useState<SupportInquiry[]>([]);
 
+  // Pagination & Filtering States
+  const ITEMS_PER_PAGE = 7;
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  // Tab-specific filters
+  const [productSearch, setProductSearch] = useState('');
+  const [productTypeFilter, setProductTypeFilter] = useState<'all' | 'single' | 'combo'>('all');
+  const [productStatusFilter, setProductStatusFilter] = useState<'all' | 'active' | 'hidden'>('all');
+  
+  const [blogSearch, setBlogSearch] = useState('');
+  const [blogStatusFilter, setBlogStatusFilter] = useState<'all' | 'published' | 'draft'>('all');
+  
+  const [emailSearch, setEmailSearch] = useState('');
+  const [emailStatusFilter, setEmailStatusFilter] = useState<'all' | 'delivered' | 'failed' | 'pending'>('all');
+  
+  const [supportSearch, setSupportSearch] = useState('');
+  const [supportStatusFilter, setSupportStatusFilter] = useState<'all' | 'new' | 'replied'>('all');
+
+  // Drag & Drop State
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+
+  // Reset pagination when tab or filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab, orderFilter, orderSearch, productSearch, productTypeFilter, productStatusFilter, blogSearch, blogStatusFilter, emailSearch, emailStatusFilter, supportSearch, supportStatusFilter]);
+
   // SePay Live API Sync
   const [isSyncingSePay, setIsSyncingSePay] = useState(false);
   const [sepaySyncNotice, setSepaySyncNotice] = useState<string | null>(null);
@@ -421,6 +447,22 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
+  const handleReorder = async (type: 'products' | 'blogs', newIds: string[]) => {
+    try {
+      const res = await fetch(`/api/${type}/reorder`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: newIds }),
+      });
+      if (res.ok) {
+        if (type === 'products') onRefreshProducts();
+        else fetchDashboardData();
+      }
+    } catch (err) {
+      console.error(`Error reordering ${type}:`, err);
+    }
+  };
+
   // Config Save
   const handleSaveConfig = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -482,6 +524,96 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
     return true;
   });
+
+  const filteredProducts = products.filter(p => {
+    if (productTypeFilter !== 'all' && p.type !== productTypeFilter) return false;
+    if (productStatusFilter !== 'all' && p.status !== productStatusFilter) return false;
+    if (productSearch) {
+      const q = productSearch.toLowerCase();
+      return p.title.toLowerCase().includes(q) || (p.tagline || '').toLowerCase().includes(q);
+    }
+    return true;
+  });
+
+  const filteredBlogs = blogs.filter(b => {
+    if (blogStatusFilter !== 'all' && b.status !== blogStatusFilter) return false;
+    if (blogSearch) {
+      const q = blogSearch.toLowerCase();
+      return b.title.toLowerCase().includes(q) || (b.excerpt || '').toLowerCase().includes(q);
+    }
+    return true;
+  });
+
+  const filteredEmailLogs = emailLogs.filter(log => {
+    if (emailStatusFilter !== 'all' && log.status !== emailStatusFilter) return false;
+    if (emailSearch) {
+      const q = emailSearch.toLowerCase();
+      return (
+        log.orderCode.toLowerCase().includes(q) ||
+        log.toEmail.toLowerCase().includes(q) ||
+        log.customerName.toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
+
+  const filteredSupportInquiries = supportInquiries.filter(item => {
+    if (supportStatusFilter !== 'all' && item.status !== supportStatusFilter) return false;
+    if (supportSearch) {
+      const q = supportSearch.toLowerCase();
+      return (
+        item.name.toLowerCase().includes(q) ||
+        item.email.toLowerCase().includes(q) ||
+        item.message.toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
+
+  // Pagination Helper
+  const renderPagination = (totalItems: number) => {
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className="flex items-center justify-between px-4 py-3 bg-white border-t border-slate-200 shrink-0">
+        <div className="text-[11px] text-slate-500">
+          Hiển thị <strong>{Math.min(totalItems, (currentPage - 1) * ITEMS_PER_PAGE + 1)}</strong> - <strong>{Math.min(totalItems, currentPage * ITEMS_PER_PAGE)}</strong> trong tổng số <strong>{totalItems}</strong> mục
+        </div>
+        <div className="flex items-center gap-1">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            className="p-1.5 rounded border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+          </button>
+          
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+            <button
+              key={page}
+              onClick={() => setCurrentPage(page)}
+              className={`min-w-[28px] h-7 text-[11px] font-bold rounded border transition-all cursor-pointer ${
+                currentPage === page
+                  ? 'bg-blue-600 border-blue-600 text-white shadow-sm'
+                  : 'bg-white border-slate-200 text-slate-600 hover:border-blue-400 hover:text-blue-600'
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            className="p-1.5 rounded border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer rotate-180"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   if (!isOpen) return null;
 
@@ -791,7 +923,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                          {filteredOrders.map(order => (
+                          {filteredOrders.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map(order => (
                             <tr key={order.id} className="hover:bg-slate-50/80 transition-colors">
                               <td className="px-4 py-3 font-mono font-bold text-blue-600">
                                 {order.orderCode}
@@ -906,6 +1038,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </table>
                     </div>
                   </div>
+                  {renderPagination(filteredOrders.length)}
                 </div>
               )}
 
@@ -954,6 +1087,58 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <Plus className="w-3.5 h-3.5" />
                       <span>Thêm ấn phẩm mới</span>
                     </button>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div className="flex items-center gap-1.5 p-1 bg-slate-200/80 rounded-lg text-xs font-semibold">
+                      <button
+                        onClick={() => setProductTypeFilter('all')}
+                        className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                          productTypeFilter === 'all' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
+                        }`}
+                      >
+                        Tất cả ({products.length})
+                      </button>
+                      <button
+                        onClick={() => setProductTypeFilter('single')}
+                        className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                          productTypeFilter === 'single' ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600'
+                        }`}
+                      >
+                        Sách lẻ
+                      </button>
+                      <button
+                        onClick={() => setProductTypeFilter('combo')}
+                        className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                          productTypeFilter === 'combo' ? 'bg-white text-blue-700 shadow-xs' : 'text-slate-600'
+                        }`}
+                      >
+                        Combo
+                      </button>
+                    </div>
+
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <select
+                        value={productStatusFilter}
+                        onChange={e => setProductStatusFilter(e.target.value as any)}
+                        className="px-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      >
+                        <option value="all">Mọi trạng thái</option>
+                        <option value="active">Đang mở bán</option>
+                        <option value="hidden">Đang tạm ẩn</option>
+                      </select>
+
+                      <div className="relative flex-1 sm:w-64">
+                        <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                        <input
+                          type="text"
+                          placeholder="Tìm tên sản phẩm..."
+                          value={productSearch}
+                          onChange={e => setProductSearch(e.target.value)}
+                          className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   {/* Product Form Modal / Section */}
@@ -1167,8 +1352,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
-                        {products.map(p => (
-                          <tr key={p.id} className="hover:bg-slate-50/80">
+                        {filteredProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((p, idx) => {
+                          const globalIdx = (currentPage - 1) * ITEMS_PER_PAGE + idx;
+                          return (
+                            <tr 
+                              key={p.id} 
+                              draggable={!productSearch && productTypeFilter === 'all' && productStatusFilter === 'all'}
+                              onDragStart={() => setDraggedIndex(globalIdx)}
+                              onDragOver={(e) => e.preventDefault()}
+                              onDrop={() => {
+                                if (draggedIndex === null || draggedIndex === globalIdx) return;
+                                const newItems = [...products];
+                                const [draggedItem] = newItems.splice(draggedIndex, 1);
+                                newItems.splice(globalIdx, 0, draggedItem);
+                                handleReorder('products', newItems.map(x => x.id));
+                                setDraggedIndex(null);
+                              }}
+                              className={`hover:bg-slate-50/80 transition-colors ${draggedIndex === globalIdx ? 'opacity-50 bg-blue-50' : ''} ${!productSearch && productTypeFilter === 'all' && productStatusFilter === 'all' ? 'cursor-move' : ''}`}
+                            >
                             <td className="px-4 py-3">
                               {p.image_url ? (
                                 <div className="w-10 h-14 rounded overflow-hidden bg-slate-900 border border-slate-300 shadow-2xs shrink-0">
@@ -1243,10 +1444,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               </button>
                             </td>
                           </tr>
-                        ))}
+                        );
+                      })}
                       </tbody>
                     </table>
                   </div>
+                  {renderPagination(filteredProducts.length)}
                 </div>
               )}
 
@@ -1294,6 +1497,46 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <Plus className="w-3.5 h-3.5" />
                       <span>Thêm bài viết mới</span>
                     </button>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div className="flex items-center gap-1.5 p-1 bg-slate-200/80 rounded-lg text-xs font-semibold">
+                      <button
+                        onClick={() => setBlogStatusFilter('all')}
+                        className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                          blogStatusFilter === 'all' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
+                        }`}
+                      >
+                        Tất cả ({blogs.length})
+                      </button>
+                      <button
+                        onClick={() => setBlogStatusFilter('published')}
+                        className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                          blogStatusFilter === 'published' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-600'
+                        }`}
+                      >
+                        Đã xuất bản
+                      </button>
+                      <button
+                        onClick={() => setBlogStatusFilter('draft')}
+                        className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                          blogStatusFilter === 'draft' ? 'bg-white text-amber-700 shadow-xs' : 'text-slate-600'
+                        }`}
+                      >
+                        Bản nháp
+                      </button>
+                    </div>
+
+                    <div className="relative w-full sm:w-64">
+                      <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                      <input
+                        type="text"
+                        placeholder="Tìm bài viết..."
+                        value={blogSearch}
+                        onChange={e => setBlogSearch(e.target.value)}
+                        className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
                   </div>
 
                   {/* Blog Form Modal / Drawer */}
@@ -1455,11 +1698,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-100">
-                        {blogs.map(blog => {
+                        {filteredBlogs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map((blog, idx) => {
                           const linked = products.find(p => p.id === blog.linkedProductId);
+                          const globalIdx = (currentPage - 1) * ITEMS_PER_PAGE + idx;
 
                           return (
-                            <tr key={blog.id} className="hover:bg-slate-50/80">
+                            <tr 
+                              key={blog.id} 
+                              draggable={!blogSearch && blogStatusFilter === 'all'}
+                              onDragStart={() => setDraggedIndex(globalIdx)}
+                              onDragOver={(e) => e.preventDefault()}
+                              onDrop={() => {
+                                if (draggedIndex === null || draggedIndex === globalIdx) return;
+                                const newItems = [...blogs];
+                                const [draggedItem] = newItems.splice(draggedIndex, 1);
+                                newItems.splice(globalIdx, 0, draggedItem);
+                                handleReorder('blogs', newItems.map(x => x.id));
+                                setDraggedIndex(null);
+                              }}
+                              className={`hover:bg-slate-50/80 transition-colors ${draggedIndex === globalIdx ? 'opacity-50 bg-blue-50' : ''} ${!blogSearch && blogStatusFilter === 'all' ? 'cursor-move' : ''}`}
+                            >
                               <td className="px-4 py-3">
                                 {blog.thumbnail_url ? (
                                   <div className="w-14 h-10 rounded overflow-hidden bg-slate-900 border border-slate-300 shadow-2xs shrink-0">
@@ -1519,6 +1777,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </tbody>
                     </table>
                   </div>
+                  {renderPagination(filteredBlogs.length)}
                 </div>
               )}
 
@@ -1705,7 +1964,48 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
               {/* TAB 4: NHẬT KÝ EMAIL */}
               {activeTab === 'emails' && (
-                <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
+                <div className="space-y-4">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div className="flex items-center gap-1.5 p-1 bg-slate-200/80 rounded-lg text-xs font-semibold">
+                      <button
+                        onClick={() => setEmailStatusFilter('all')}
+                        className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                          emailStatusFilter === 'all' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
+                        }`}
+                      >
+                        Tất cả ({emailLogs.length})
+                      </button>
+                      <button
+                        onClick={() => setEmailStatusFilter('delivered')}
+                        className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                          emailStatusFilter === 'delivered' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-600'
+                        }`}
+                      >
+                        Đã gửi
+                      </button>
+                      <button
+                        onClick={() => setEmailStatusFilter('failed')}
+                        className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                          emailStatusFilter === 'failed' ? 'bg-white text-rose-700 shadow-xs' : 'text-slate-600'
+                        }`}
+                      >
+                        Thất bại
+                      </button>
+                    </div>
+
+                    <div className="relative w-full sm:w-64">
+                      <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                      <input
+                        type="text"
+                        placeholder="Tìm mã đơn, email..."
+                        value={emailSearch}
+                        onChange={e => setEmailSearch(e.target.value)}
+                        className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
                   <table className="w-full text-left text-xs">
                     <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider text-[10px]">
                       <tr>
@@ -1718,7 +2018,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
-                      {emailLogs.map(log => (
+                      {filteredEmailLogs.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map(log => (
                         <tr key={log.id} className="hover:bg-slate-50">
                           <td className="px-4 py-3 font-mono font-bold text-blue-600">{log.orderCode}</td>
                           <td className="px-4 py-3">
@@ -1760,25 +2060,52 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       Chưa có email nào được gửi trong phiên làm việc.
                     </div>
                   )}
+                  {renderPagination(filteredEmailLogs.length)}
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* TAB 5: QUẢN LÝ PHẢN HỒI LIÊN HỆ */}
+            {/* TAB 5: QUẢN LÝ PHẢN HỒI LIÊN HỆ */}
               {activeTab === 'support' && (
                 <div className="space-y-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                      <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                        <Mail className="w-4 h-4 text-blue-600" />
-                        <span>Quản Lý Thông Tin Phản Hồi Liên Hệ</span>
-                      </h3>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        Tổng hợp thắc mắc khách hàng gửi từ trang Liên hệ. Đánh dấu đã phản hồi hoặc xóa khi xử lý xong.
-                      </p>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-1.5 p-1 bg-slate-200/80 rounded-lg text-xs font-semibold">
+                      <button
+                        onClick={() => setSupportStatusFilter('all')}
+                        className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                          supportStatusFilter === 'all' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600'
+                        }`}
+                      >
+                        Tất cả ({supportInquiries.length})
+                      </button>
+                      <button
+                        onClick={() => setSupportStatusFilter('new')}
+                        className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                          supportStatusFilter === 'new' ? 'bg-white text-amber-700 shadow-xs' : 'text-slate-600'
+                        }`}
+                      >
+                        Chưa phản hồi
+                      </button>
+                      <button
+                        onClick={() => setSupportStatusFilter('replied')}
+                        className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
+                          supportStatusFilter === 'replied' ? 'bg-white text-emerald-700 shadow-xs' : 'text-slate-600'
+                        }`}
+                      >
+                        Đã phản hồi
+                      </button>
                     </div>
-                    <span className="text-[11px] font-bold text-slate-500 whitespace-nowrap">
-                      {supportInquiries.filter(s => s.status === 'new').length} chưa phản hồi / {supportInquiries.length} tổng
-                    </span>
+
+                    <div className="relative w-full sm:w-64">
+                      <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                      <input
+                        type="text"
+                        placeholder="Tìm phản hồi..."
+                        value={supportSearch}
+                        onChange={e => setSupportSearch(e.target.value)}
+                        className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
                   </div>
 
                   {supportInquiries.length === 0 ? (
@@ -1786,9 +2113,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       Chưa có yêu cầu liên hệ nào từ khách hàng.
                     </div>
                   ) : (
-                    <div className="space-y-3">
-                      {supportInquiries.map(item => (
-                        <div key={item.id} className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5">
+                    <>
+                      <div className="space-y-3">
+                        {filteredSupportInquiries.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE).map(item => (
+                          <div key={item.id} className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5">
                           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                             <div className="min-w-0 space-y-1">
                               <div className="flex flex-wrap items-center gap-2">
@@ -1835,7 +2163,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           </p>
                         </div>
                       ))}
-                    </div>
+                      </div>
+                      {renderPagination(filteredSupportInquiries.length)}
+                    </>
                   )}
                 </div>
               )}

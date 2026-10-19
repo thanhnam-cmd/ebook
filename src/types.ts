@@ -36,6 +36,7 @@ export interface Product {
   included_books?: string[];
   sample_read_url?: string;
   sampleDriveUrl?: string;
+  display_order?: number;
   themeColor?: {
     primary: string;
     secondary: string;
@@ -58,6 +59,7 @@ export interface BlogPost {
   status: 'published' | 'draft';
   tags: string[];
   linkedProductId?: string;
+  display_order?: number;
 }
 
 export interface Order {

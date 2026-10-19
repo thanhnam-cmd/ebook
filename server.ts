@@ -214,6 +214,15 @@ app.delete('/api/products/:id', (req: Request, res: Response) => {
   return res.json({ success: true, message: 'Product hidden successfully', product: deleted });
 });
 
+app.post('/api/products/reorder', async (req: Request, res: Response) => {
+  const { ids } = req.body;
+  if (!Array.isArray(ids)) {
+    return res.status(400).json({ error: 'ids must be an array' });
+  }
+  const success = await db.reorderProducts(ids);
+  return res.json({ success });
+});
+
 // 1.5. BLOGS API
 app.get('/api/blogs', (req: Request, res: Response) => {
   const showAll = req.query.all === 'true';
@@ -257,6 +266,15 @@ app.delete('/api/blogs/:id', (req: Request, res: Response) => {
     return res.status(404).json({ error: 'Bài viết không tồn tại' });
   }
   return res.json({ success: true, message: 'Đã xóa bài viết' });
+});
+
+app.post('/api/blogs/reorder', async (req: Request, res: Response) => {
+  const { ids } = req.body;
+  if (!Array.isArray(ids)) {
+    return res.status(400).json({ error: 'ids must be an array' });
+  }
+  const success = await db.reorderBlogs(ids);
+  return res.json({ success });
 });
 
 // 2. ORDERS API (GUEST CHECKOUT)
