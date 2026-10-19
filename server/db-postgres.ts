@@ -191,9 +191,17 @@ CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
 CREATE INDEX IF NOT EXISTS idx_email_logs_order_code ON email_logs(order_code);
 CREATE INDEX IF NOT EXISTS idx_support_created_at ON support_inquiries(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
+
+-- Migrations for existing tables (CREATE TABLE IF NOT EXISTS does not add new columns)
+ALTER TABLE products ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
+ALTER TABLE blogs ADD COLUMN IF NOT EXISTS display_order INTEGER DEFAULT 0;
 `;
 
     await this.pool.query(ddl);
+
+    // Ensure every row has a concrete ordering value
+    await this.pool.query('UPDATE products SET display_order = 0 WHERE display_order IS NULL');
+    await this.pool.query('UPDATE blogs SET display_order = 0 WHERE display_order IS NULL');
   }
 
   private run(query: string, values: unknown[] = []) {

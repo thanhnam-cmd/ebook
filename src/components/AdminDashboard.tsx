@@ -24,6 +24,7 @@ import {
   ArrowLeft,
   Trash2,
   Image as ImageIcon,
+  GripVertical,
 } from 'lucide-react';
 import { Product, Order, SePayConfig, EmailLog, BlogPost, SupportInquiry } from '../types';
 import { ImageDisplayCustomizer } from './ImageDisplayCustomizer';
@@ -301,23 +302,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       }
     } catch (err) {
       alert('Lỗi cập nhật trạng thái');
-    }
-  };
-
-  const handleDeleteProduct = async (product: Product) => {
-    if (!confirm(`Bạn có chắc chắn muốn xóa sản phẩm "${product.title}"? Sản phẩm sẽ được chuyển sang trạng thái ẩn.`)) return;
-    try {
-      const res = await fetch(`/api/products/${product.id}`, {
-        method: 'DELETE',
-      });
-      if (res.ok) {
-        onRefreshProducts();
-      } else {
-        const data = await res.json();
-        alert(data.error || 'Lỗi xóa sản phẩm');
-      }
-    } catch (err) {
-      alert('Lỗi xóa sản phẩm');
     }
   };
 
@@ -1371,19 +1355,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               className={`hover:bg-slate-50/80 transition-colors ${draggedIndex === globalIdx ? 'opacity-50 bg-blue-50' : ''} ${!productSearch && productTypeFilter === 'all' && productStatusFilter === 'all' ? 'cursor-move' : ''}`}
                             >
                             <td className="px-4 py-3">
-                              {p.image_url ? (
-                                <div className="w-10 h-14 rounded overflow-hidden bg-slate-900 border border-slate-300 shadow-2xs shrink-0">
-                                  <img
-                                    src={p.image_url}
-                                    alt={p.title}
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
-                              ) : (
-                                <div className="w-10 h-14 rounded bg-gradient-to-br from-blue-600 to-indigo-900 flex items-center justify-center text-white text-[9px] font-bold shadow-2xs shrink-0 text-center px-0.5">
-                                  Bìa Số
-                                </div>
-                              )}
+                              <div className="flex items-center gap-2">
+                                {!productSearch && productTypeFilter === 'all' && productStatusFilter === 'all' && (
+                                  <span title="Kéo để sắp xếp thứ tự" className="shrink-0">
+                                    <GripVertical className="w-4 h-4 text-slate-300" />
+                                  </span>
+                                )}
+                                {p.image_url ? (
+                                  <div className="w-10 h-14 rounded overflow-hidden bg-slate-900 border border-slate-300 shadow-2xs shrink-0">
+                                    <img
+                                      src={p.image_url}
+                                      alt={p.title}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
+                                ) : (
+                                  <div className="w-10 h-14 rounded bg-gradient-to-br from-blue-600 to-indigo-900 flex items-center justify-center text-white text-[9px] font-bold shadow-2xs shrink-0 text-center px-0.5">
+                                    Bìa Số
+                                  </div>
+                                )}
+                              </div>
                             </td>
                             <td className="px-4 py-3">
                               <div className="font-bold text-slate-900">{p.title}</div>
@@ -1434,13 +1425,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                 }`}
                               >
                                 {p.status === 'active' ? 'Ẩn sách' : 'Mở bán'}
-                              </button>
-                              <button
-                                onClick={() => handleDeleteProduct(p)}
-                                className="inline-flex items-center gap-1 px-2.5 py-1 rounded text-xs font-semibold cursor-pointer text-rose-700 bg-rose-50 hover:bg-rose-100"
-                              >
-                                <Trash2 className="w-3 h-3" />
-                                <span>Xóa</span>
                               </button>
                             </td>
                           </tr>
@@ -1719,6 +1703,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               className={`hover:bg-slate-50/80 transition-colors ${draggedIndex === globalIdx ? 'opacity-50 bg-blue-50' : ''} ${!blogSearch && blogStatusFilter === 'all' ? 'cursor-move' : ''}`}
                             >
                               <td className="px-4 py-3">
+                                <div className="flex items-center gap-2">
+                                {!blogSearch && blogStatusFilter === 'all' && (
+                                  <span title="Kéo để sắp xếp thứ tự" className="shrink-0">
+                                    <GripVertical className="w-4 h-4 text-slate-300" />
+                                  </span>
+                                )}
                                 {blog.thumbnail_url ? (
                                   <div className="w-14 h-10 rounded overflow-hidden bg-slate-900 border border-slate-300 shadow-2xs shrink-0">
                                     <img
@@ -1732,6 +1722,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                                     Gradient
                                   </div>
                                 )}
+                                </div>
                               </td>
                               <td className="px-4 py-3">
                                 <div className="font-bold text-slate-900 line-clamp-1">{blog.title}</div>
