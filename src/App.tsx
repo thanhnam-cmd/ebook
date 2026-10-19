@@ -195,15 +195,8 @@ export default function App() {
         onQuickBuy={() => products.length > 0 && handleBuy(products[0])}
       />
 
-      {/* Initial Loading Spinner */}
-      {isInitialLoading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#f8fafc]">
-          <div className="w-10 h-10 border-4 border-blue-600/20 border-t-blue-600 rounded-full animate-spin"></div>
-        </div>
-      )}
-
       {/* Main Page Content */}
-      <main className={`flex-1 ${currentRoute === 'home' ? '' : 'pt-16 sm:pt-[4.5rem]'} transition-opacity duration-500 ${isInitialLoading ? 'opacity-0' : 'opacity-100'}`}>
+      <main className={`flex-1 ${currentRoute === 'home' ? '' : 'pt-16 sm:pt-[4.5rem]'}`}>
         {currentRoute === 'home' && (
           <HomePage
             products={products}
