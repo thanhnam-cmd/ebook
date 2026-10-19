@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
+import dns from 'node:dns';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
@@ -7,6 +8,10 @@ import { db, dbReady } from './server/store.ts';
 import { Product, Order, EmailLog, SupportInquiry, SePayWebhookPayload, BlogPost } from './src/types.ts';
 
 dotenv.config();
+
+// Ưu tiên IPv4: my.sepay.vn (Cloudflare) trả bản ghi IPv6 mà VPS không có route,
+// khiến Node thử IPv6 trước và bị ETIMEDOUT (internalConnectMultiple).
+dns.setDefaultResultOrder('ipv4first');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -323,17 +328,36 @@ app.get('/api/orders/:code', (req: Request, res: Response) => {
 });
 
 // 3. SEPAY LIVE API INTEGRATION & AUTOMATIC RECONCILIATION
+const SEPAY_API_BASE = 'https://my.sepay.vn/userapi';
+const SEPAY_FETCH_TIMEOUT_MS = 10000;
+
+// fetch có timeout cứng: tránh treo vô hạn khi mạng VPS <-> SePay chập chờn
+function sepayFetch(pathname: string, token: string) {
+  return fetch(`${SEPAY_API_BASE}${pathname}`, {
+    headers: { Authorization: `Bearer ${token}` },
+    signal: AbortSignal.timeout(SEPAY_FETCH_TIMEOUT_MS),
+  });
+}
+
+// Chống chồng lấn: chỉ cho 1 tiến trình đồng bộ chạy tại một thời điểm
+let sepaySyncInFlight = false;
+let sepaySyncErrorLoggedAt = 0;
+
 async function syncSePayTransactions() {
+  if (sepaySyncInFlight) {
+    return { success: false, message: 'Đang đồng bộ, bỏ qua lần gọi trùng' };
+  }
+  sepaySyncInFlight = true;
+
   const sepayConfig = db.getConfig();
   const token = sepayConfig.apiKey || sepayConfig.webhookToken;
-  if (!token) return { success: false, message: 'Chưa cấu hình SePay API Token' };
+  if (!token) {
+    sepaySyncInFlight = false;
+    return { success: false, message: 'Chưa cấu hình SePay API Token' };
+  }
 
   try {
-    const res = await fetch('https://my.sepay.vn/userapi/transactions/list?limit=50', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
+    const res = await sepayFetch('/transactions/list?limit=50', token);
 
     if (!res.ok) {
       console.warn(`[SePay Sync] SePay API responded with HTTP ${res.status}`);
@@ -387,8 +411,15 @@ async function syncSePayTransactions() {
       transactions: transactions.slice(0, 5),
     };
   } catch (err) {
-    console.error('[SePay Sync] Network error connecting to SePay:', err);
+    // Ghi log tối đa 1 lần / 5 phút để tránh ngập log khi mạng chập chờn
+    const now = Date.now();
+    if (now - sepaySyncErrorLoggedAt > 5 * 60 * 1000) {
+      sepaySyncErrorLoggedAt = now;
+      console.error('[SePay Sync] Network error connecting to SePay:', err);
+    }
     return { success: false, error: String(err) };
+  } finally {
+    sepaySyncInFlight = false;
   }
 }
 
@@ -417,12 +448,8 @@ app.get('/api/sepay/status', async (req: Request, res: Response) => {
   const token = sepayConfig.apiKey || sepayConfig.webhookToken;
   try {
     const [txRes, bankRes] = await Promise.all([
-      fetch('https://my.sepay.vn/userapi/transactions/list?limit=1', {
-        headers: { 'Authorization': `Bearer ${token}` },
-      }),
-      fetch('https://my.sepay.vn/userapi/bankaccounts/list', {
-        headers: { 'Authorization': `Bearer ${token}` },
-      }),
+      sepayFetch('/transactions/list?limit=1', token),
+      sepayFetch('/bankaccounts/list', token),
     ]);
 
     const txOk = txRes.ok;
