@@ -239,7 +239,7 @@ export const BlogDetailModal: React.FC<BlogDetailModalProps> = ({
         {/* Modal Bottom Bar */}
         <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-t border-slate-200 bg-slate-50 shrink-0">
           <div className="text-xs text-slate-500 truncate mr-2">
-            Bài viết chia sẻ kiến thức · Bản quyền Hoàng Nguyễn
+            Bài viết chia sẻ kiến thức · Bản quyền Đăng Trí
           </div>
           <button
             onClick={onClose}

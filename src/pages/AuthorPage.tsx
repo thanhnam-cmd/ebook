@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   Star,
 } from 'lucide-react';
-import { AnimatedCounter } from '../components/AnimatedCounter';
 
 interface AuthorPageProps {
   onNavigate: (route: AppRoute) => void;
@@ -64,28 +63,6 @@ export const AuthorPage: React.FC<AuthorPageProps> = ({ onNavigate, onQuickBuy }
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
             Kiến thức tôi chia sẻ xuất phát từ niềm tin rằng, một đời sống tốt cần được xây dựng trên những nền móng vững chắc. Với tôi, ba nền móng đầu tiên là hiểu và làm chủ chính mình, xây dựng các mối quan hệ lành mạnh và quản lý tiền bạc có kỷ luật. Tôi không cho rằng một cuốn sách có thể giải quyết mọi vấn đề, cũng không tin rằng có một công thức phù hợp với tất cả mọi người. Điều tôi mong muốn là chia sẻ những góc nhìn, kiến thức và bài học đã được đúc kết, để bạn có thêm cơ sở nhìn nhận hoàn cảnh của mình và tự đưa ra những lựa chọn phù hợp.
           </p>
-
-          {/* Stats with Animated Counters */}
-          <div className="grid grid-cols-3 gap-3 sm:gap-6 pt-6 border-t border-slate-100 text-center">
-            <div className="p-3 sm:p-4 bg-slate-50/80 rounded-2xl border border-slate-100 shadow-xs">
-              <div className="text-2xl sm:text-4xl font-black text-blue-600 font-mono">
-                <AnimatedCounter target={3} suffix="" duration={1200} />
-              </div>
-              <div className="text-xs sm:text-sm text-slate-600 font-medium mt-1">Nền móng cốt lõi</div>
-            </div>
-            <div className="p-3 sm:p-4 bg-slate-50/80 rounded-2xl border border-slate-100 shadow-xs">
-              <div className="text-2xl sm:text-4xl font-black text-blue-600 font-mono">
-                <AnimatedCounter target={36} suffix="" duration={1800} />
-              </div>
-              <div className="text-xs sm:text-sm text-slate-600 font-medium mt-1">Chương thực chiến</div>
-            </div>
-            <div className="p-3 sm:p-4 bg-slate-50/80 rounded-2xl border border-slate-100 shadow-xs">
-              <div className="text-2xl sm:text-4xl font-black text-blue-600 font-mono">
-                <AnimatedCounter target={100} suffix="%" duration={1500} />
-              </div>
-              <div className="text-xs sm:text-sm text-slate-600 font-medium mt-1">Tự chịu trách nhiệm</div>
-            </div>
-          </div>
 
           <div className="pt-4 flex flex-wrap items-center justify-center sm:justify-start gap-3">
             <button
@@ -156,7 +133,6 @@ export const AuthorPage: React.FC<AuthorPageProps> = ({ onNavigate, onQuickBuy }
           {[...Array(5)].map((_, i) => (
             <Star key={i} className="w-4 h-4 fill-amber-400" />
           ))}
-          <span className="text-xs text-slate-300 ml-2">Cảm nhận từ độc giả</span>
         </div>
 
         <blockquote className="text-base sm:text-xl font-medium text-slate-200 leading-relaxed italic">
@@ -169,7 +145,6 @@ export const AuthorPage: React.FC<AuthorPageProps> = ({ onNavigate, onQuickBuy }
           </div>
           <div>
             <div className="font-bold text-sm text-white">Đăng Trí</div>
-            <div className="text-xs text-slate-400">Tác giả Bộ Ba Mật Mã</div>
           </div>
         </div>
       </div>

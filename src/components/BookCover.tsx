@@ -143,7 +143,7 @@ export const BookCover: React.FC<BookCoverProps> = ({ product, size = 'md', clas
 
         {/* Bottom: Format, Pages & Author */}
         <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-300">
-          <span className="font-medium text-white/90">Tác giả: Hoàng Nguyễn</span>
+          <span className="font-medium text-white/90">Tác giả: Đăng Trí</span>
           <span className="font-mono text-slate-300">PDF · {product.pages} trang</span>
         </div>
       </div>

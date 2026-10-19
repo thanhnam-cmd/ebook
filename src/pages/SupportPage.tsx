@@ -176,7 +176,7 @@ export const SupportPage: React.FC<SupportPageProps> = ({ onNavigate }) => {
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>0948889944</span>
+                <span>0944391579</span>
               </div>
               <div className="flex items-center gap-3">
                 <Clock className="w-4 h-4 text-amber-400 shrink-0" />

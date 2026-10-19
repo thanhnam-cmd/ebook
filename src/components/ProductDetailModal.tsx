@@ -98,7 +98,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 )}
               </div>
 
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed pt-1">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed pt-1 whitespace-pre-line break-words">
                 {product.description}
               </p>
             </div>

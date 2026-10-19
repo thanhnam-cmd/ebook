@@ -110,42 +110,7 @@ export const SampleReadModal: React.FC<SampleReadModalProps> = ({
                 &ldquo;{product.tagline}&rdquo;
               </p>
               <div className="text-[11px] sm:text-xs text-slate-400 font-medium">
-                Tác giả: <strong>Hoàng Nguyễn</strong> · Bản quyền xuất bản kỹ thuật số PDF
-              </div>
-            </div>
-
-            {/* Introduction Excerpt */}
-            <div className="space-y-3.5 sm:space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed">
-              <h3 className="text-sm sm:text-base font-bold text-slate-900">Lời tựa: Vì sao cuốn sách này ra đời?</h3>
-              <p>
-                Nếu bạn từng cảm thấy một ngày trôi qua trong sự bận rộn hỗn loạn nhưng khi đêm về lại thấy trống rỗng; nếu bạn từng tự hỏi tại sao mình nỗ lực rất nhiều nhưng các mục tiêu quan trọng vẫn dậm chân tại chỗ — bạn không hề cô độc.
-              </p>
-              <p>
-                Cuốn sách này không được viết để ru ngủ bạn bằng những lý thuyết hoa mỹ hay những câu danh ngôn truyền cảm hứng sáo rỗng. Nó là cuốn cẩm nang chiến thuật được đúc kết từ 10 năm kinh nghiệm giải quyết các bài toán thực tế.
-              </p>
-            </div>
-
-            {/* Core Blueprint Excerpt */}
-            <div className="p-4 sm:p-5 bg-blue-50/70 border border-blue-200 rounded-xl space-y-3">
-              <h4 className="text-xs sm:text-sm font-bold text-blue-900">
-                Chương 1: Giải phóng bộ nhớ đệm và định hình tâm thế
-              </h4>
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                Khi bộ não của bạn liên tục phải lưu giữ hàng chục đầu việc chưa hoàn thành, nó rơi vào trạng thái &ldquo;rò rỉ RAM&rdquo;. Năng lượng tư duy bị tiêu hao không phải cho công việc sâu mà chỉ đơn thuần để ghi nhớ những điều lặt vặt...
-              </p>
-              <div className="space-y-1.5 text-xs text-blue-800 font-medium">
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
-                  <span>Quy tắc 3 giây phân loại phản xạ</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
-                  <span>Kỹ thuật thiết lập ranh giới chú ý trong kỷ nguyên thông tin</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
-                  <span>Chiến lược quản trị năng lượng sinh học</span>
-                </div>
+                Tác giả: <strong>Đăng Trí</strong> · Bản quyền xuất bản kỹ thuật số PDF
               </div>
             </div>
 
@@ -156,7 +121,7 @@ export const SampleReadModal: React.FC<SampleReadModalProps> = ({
               </div>
               <div>
                 <h4 className="text-base sm:text-lg font-bold text-white">
-                  Bạn vừa hoàn thành 15 trang đọc thử!
+                  Click nút Mở Google Drive để đọc thử
                 </h4>
                 <p className="text-xs text-slate-300 mt-1 max-w-md mx-auto">
                   Để đọc tiếp toàn bộ <strong>{product.pages} trang</strong> chuyên sâu cùng các biểu mẫu thực hành đính kèm, hãy đặt mua bản PDF chính thức.

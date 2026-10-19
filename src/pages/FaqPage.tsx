@@ -255,7 +255,7 @@ export const FaqPage: React.FC<FaqPageProps> = ({ onNavigate }) => {
         <MessageCircle className="w-8 h-8 text-blue-600 mx-auto" />
         <h3 className="text-base font-bold text-blue-950">Chưa tìm thấy giải đáp cho vấn đề của bạn?</h3>
         <p className="text-xs sm:text-sm text-slate-600 max-w-md mx-auto">
-          Hãy gửi email về <span className="font-semibold text-slate-800">hotro@ebookstore.vn</span> kèm mã đơn hàng và ảnh thanh toán nếu bạn cần chúng tôi kiểm tra thủ công.
+          Hãy gửi email về <span className="font-semibold text-slate-800">bookdangtri@gmail.com</span> kèm mã đơn hàng và ảnh thanh toán nếu bạn cần chúng tôi kiểm tra thủ công.
         </p>
         <button
           onClick={() => onNavigate('contact')}

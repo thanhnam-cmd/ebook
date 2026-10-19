@@ -211,6 +211,7 @@ export default function App() {
             initialFilter={productFilter}
             onNavigate={navigate}
             onBuy={handleBuy}
+            onViewDetails={(p) => setSelectedProductForDetail(p)}
             onSampleRead={handleSampleRead}
           />
         )}

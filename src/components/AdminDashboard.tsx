@@ -307,6 +307,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       : `Bạn có chắc chắn muốn lưu thay đổi cho sản phẩm "${prodForm.title}"?`;
     if (!confirm(confirmMessage)) return;
 
+    const cleanLines = (arr?: string[]) =>
+      (arr || []).map((s) => s.trim()).filter((s) => s.length > 0);
+
     try {
       if (isCreatingProduct) {
         const res = await fetch('/api/products', {
@@ -321,9 +324,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             original_price: Number(prodForm.original_price) || Number(prodForm.price),
             sample_read_url: prodForm.sample_read_url || '',
             status: 'active',
-            table_of_contents: prodForm.table_of_contents || ['Chương 1', 'Chương 2'],
-            for_whom: prodForm.for_whom || ['Người tìm kiếm giải pháp thực chiến'],
-            not_for_whom: prodForm.not_for_whom || ['Người không hành động'],
+            table_of_contents: cleanLines(prodForm.table_of_contents),
+            for_whom: cleanLines(prodForm.for_whom),
+            not_for_whom: cleanLines(prodForm.not_for_whom),
           }),
         });
         if (res.ok) {
@@ -343,6 +346,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             price: Number(prodForm.price),
             original_price: Number(prodForm.original_price),
             sample_read_url: prodForm.sample_read_url || '',
+            table_of_contents: cleanLines(prodForm.table_of_contents),
+            for_whom: cleanLines(prodForm.for_whom),
+            not_for_whom: cleanLines(prodForm.not_for_whom),
           }),
         });
         if (res.ok) {
@@ -372,7 +378,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             ...blogForm,
             thumbnail_url: blogForm.thumbnail_url || '',
             image_config: blogForm.image_config,
-            author: blogForm.author || 'Hoàng Nguyễn',
+            author: blogForm.author || 'Đăng Trí',
             readTime: blogForm.readTime || '4 phút đọc',
             tags: blogForm.tags || ['Tri Thức'],
             status: 'published',
@@ -996,6 +1002,29 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           </select>
                         </div>
 
+                        <div className="sm:col-span-2">
+                          <label className="block font-bold text-slate-700 mb-1">
+                            Mô tả sản phẩm (xuống dòng / cách dòng sẽ hiển thị đúng bên ngoài)
+                          </label>
+                          <textarea
+                            rows={7}
+                            value={prodForm.description || ''}
+                            onChange={e => setProdForm({ ...prodForm, description: e.target.value })}
+                            placeholder={'Nhập mô tả chi tiết...\n\nCó thể xuống dòng và cách dòng tùy ý, giao diện người dùng sẽ giữ đúng bố cục này.'}
+                            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg leading-relaxed"
+                          />
+                        </div>
+
+                        <div className="sm:col-span-2">
+                          <label className="block font-bold text-slate-700 mb-1">Tagline định vị</label>
+                          <input
+                            type="text"
+                            value={prodForm.tagline || ''}
+                            onChange={e => setProdForm({ ...prodForm, tagline: e.target.value })}
+                            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg"
+                          />
+                        </div>
+
                         <div>
                           <label className="block font-bold text-slate-700 mb-1">Giá bán thực tế (VNĐ) *</label>
                           <input
@@ -1051,22 +1080,41 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         </div>
 
                         <div className="sm:col-span-2">
-                          <label className="block font-bold text-slate-700 mb-1">Tagline định vị</label>
-                          <input
-                            type="text"
-                            value={prodForm.tagline || ''}
-                            onChange={e => setProdForm({ ...prodForm, tagline: e.target.value })}
-                            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg"
+                          <label className="block font-bold text-slate-700 mb-1">
+                            Mục lục (mỗi dòng là 1 mục, hiển thị đánh số thứ tự bên ngoài)
+                          </label>
+                          <textarea
+                            rows={7}
+                            value={(prodForm.table_of_contents || []).join('\n')}
+                            onChange={e => setProdForm({ ...prodForm, table_of_contents: e.target.value.split('\n') })}
+                            placeholder={'Chương 1: ...\nChương 2: ...\nChương 3: ...'}
+                            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg leading-relaxed"
                           />
                         </div>
 
                         <div className="sm:col-span-2">
-                          <label className="block font-bold text-slate-700 mb-1">Mô tả tóm tắt</label>
+                          <label className="block font-bold text-emerald-700 mb-1">
+                            Phù hợp với (mỗi dòng là 1 ý)
+                          </label>
                           <textarea
-                            rows={3}
-                            value={prodForm.description || ''}
-                            onChange={e => setProdForm({ ...prodForm, description: e.target.value })}
-                            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg"
+                            rows={4}
+                            value={(prodForm.for_whom || []).join('\n')}
+                            onChange={e => setProdForm({ ...prodForm, for_whom: e.target.value.split('\n') })}
+                            placeholder={'Người muốn ...\nNgười đang ...'}
+                            className="w-full px-3 py-2 bg-emerald-50/60 border border-emerald-300 rounded-lg leading-relaxed"
+                          />
+                        </div>
+
+                        <div className="sm:col-span-2">
+                          <label className="block font-bold text-rose-700 mb-1">
+                            Không phù hợp với (mỗi dòng là 1 ý)
+                          </label>
+                          <textarea
+                            rows={4}
+                            value={(prodForm.not_for_whom || []).join('\n')}
+                            onChange={e => setProdForm({ ...prodForm, not_for_whom: e.target.value.split('\n') })}
+                            placeholder={'Người ...\nNgười ...'}
+                            className="w-full px-3 py-2 bg-rose-50/60 border border-rose-300 rounded-lg leading-relaxed"
                           />
                         </div>
 
@@ -1223,7 +1271,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           title: '',
                           excerpt: '',
                           content: '',
-                          author: 'Hoàng Nguyễn',
+                          author: 'Đăng Trí',
                           readTime: '5 phút đọc',
                           tags: ['Tri Thức', 'Phát Triển Bản Thân'],
                           linkedProductId: products[0]?.id || '',

@@ -18,12 +18,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     terms: {
       title: 'Điều khoản sử dụng',
       content:
-        'Toàn bộ ebook thuộc bản quyền chính thức của tác giả Hoàng Nguyễn. Quý độc giả có quyền lưu trữ, in ấn để học tập và ứng dụng cá nhân. Nghiêm cấm mọi hành vi sao chép hàng loạt, chia sẻ thương mại công khai hoặc phân phối lại khi chưa có sự đồng ý bằng văn bản của tác giả.',
+        'Toàn bộ ebook thuộc bản quyền chính thức của tác giả Đăng Trí. Quý độc giả có quyền lưu trữ, in ấn để học tập và ứng dụng cá nhân. Nghiêm cấm mọi hành vi sao chép hàng loạt, chia sẻ thương mại công khai hoặc phân phối lại khi chưa có sự đồng ý bằng văn bản của tác giả.',
     },
     refund: {
       title: 'Chính sách hoàn tiền',
       content:
-        'Chúng tôi áp dụng chính sách hỗ trợ hoàn tiền 100% trong vòng 7 ngày kể từ khi mua nếu tệp PDF bị lỗi kỹ thuật không thể mở hoặc nội dung hoàn toàn không trùng khớp với mục lục đã công bố. Vui lòng liên hệ ban quản trị qua email hotro@ebookstore.vn kèm mã đơn hàng.',
+        'Chúng tôi áp dụng chính sách hỗ trợ hoàn tiền 100% trong vòng 7 ngày kể từ khi mua nếu tệp PDF bị lỗi kỹ thuật không thể mở hoặc nội dung hoàn toàn không trùng khớp với mục lục đã công bố. Vui lòng liên hệ ban quản trị qua email bookdangtri@gmail.com kèm mã đơn hàng.',
     },
   };
 

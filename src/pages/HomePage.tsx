@@ -2,7 +2,6 @@ import React from 'react';
 import { Hero } from '../components/Hero';
 import { ProductCard } from '../components/ProductCard';
 import { BookCover } from '../components/BookCover';
-import { AnimatedCounter } from '../components/AnimatedCounter';
 import { Product, BlogPost } from '../types';
 import { AppRoute } from '../components/Navbar';
 import {
@@ -183,7 +182,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
 
             <h3 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight cinematic-text">
-              Hoàng Nguyễn — Đồng hành kiến tạo tư duy nội tại
+              Đăng Trí — Đồng hành kiến tạo tư duy nội tại
             </h3>
 
             <p className="text-base sm:text-lg text-slate-700 leading-relaxed italic border-l-4 border-blue-600 pl-4 py-1 bg-slate-50/60 rounded-r-xl">
@@ -191,40 +190,10 @@ export const HomePage: React.FC<HomePageProps> = ({
             </p>
 
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-              Hơn một thập kỷ qua, tác giả Hoàng Nguyễn đã cố vấn và đồng hành cùng hàng nghìn độc giả, doanh nhân trẻ và nhà quản lý vượt qua khủng hoảng tâm lý, giải phóng tâm trí khỏi bẫy overthinking để xây dựng nền tảng tư duy và tự do tài chính bền vững.
+              Tác giả Đăng Trí đã cố vấn và đồng hành cùng nhiều độc giả, doanh nhân trẻ và nhà quản lý vượt qua khủng hoảng tâm lý, giải phóng tâm trí khỏi bẫy overthinking để xây dựng nền tảng tư duy và tự do tài chính bền vững.
             </p>
 
-            {/* Stats Strip with Animated Rolling Counter: 10+ năm, 15.000+, 99.4% */}
-            <div className="grid grid-cols-3 gap-3 sm:gap-6 pt-6 border-t border-slate-100 text-center">
-              <div className="p-3 sm:p-4 bg-slate-50/80 rounded-2xl border border-slate-100 shadow-xs">
-                <div className="text-xl sm:text-3xl lg:text-4xl font-black text-blue-600 font-mono">
-                  <AnimatedCounter target={10} suffix="+ Năm" duration={1800} />
-                </div>
-                <div className="text-[11px] sm:text-xs text-slate-600 font-medium mt-1">
-                  Đúc kết &amp; Cố vấn
-                </div>
-              </div>
-
-              <div className="p-3 sm:p-4 bg-slate-50/80 rounded-2xl border border-slate-100 shadow-xs">
-                <div className="text-xl sm:text-3xl lg:text-4xl font-black text-blue-600 font-mono">
-                  <AnimatedCounter target={15000} suffix="+" formatWithDots duration={2200} />
-                </div>
-                <div className="text-[11px] sm:text-xs text-slate-600 font-medium mt-1">
-                  Bản sách phát hành
-                </div>
-              </div>
-
-              <div className="p-3 sm:p-4 bg-slate-50/80 rounded-2xl border border-slate-100 shadow-xs">
-                <div className="text-xl sm:text-3xl lg:text-4xl font-black text-blue-600 font-mono">
-                  <AnimatedCounter target={99.4} decimals={1} suffix="%" duration={2000} />
-                </div>
-                <div className="text-[11px] sm:text-xs text-slate-600 font-medium mt-1">
-                  Phản hồi tích cực
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-2 flex justify-center sm:justify-start">
+            <div className="pt-4 flex justify-center sm:justify-start">
               <button
                 onClick={() => onNavigate('author')}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-sm transition-all cursor-pointer btn-dynamic-secondary shadow-md"

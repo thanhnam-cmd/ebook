@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, FileText, ArrowRight, ExternalLink } from 'lucide-react';
+import { FileText, ArrowRight, ExternalLink } from 'lucide-react';
 import { Product } from '../types';
 import { BookCover } from './BookCover';
 
@@ -94,27 +94,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             )}
           </div>
 
-          {/* Secondary Action Row: Đọc thử, chỉ hiển thị chi tiết khi trang có hỗ trợ */}
-          <div className={`grid gap-2 ${canViewDetails ? 'grid-cols-2' : 'grid-cols-1'}`}>
+          {/* Secondary Action Row: Chỉ sách lẻ mới có Đọc thử, combo ẩn hoàn toàn */}
+          {!isCombo && (
             <button
               onClick={() => onSampleRead(product)}
-              className="min-h-[38px] px-2.5 py-2 text-xs font-semibold text-blue-700 hover:text-blue-800 bg-blue-50/80 hover:bg-blue-100/80 border border-blue-200/60 rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-98"
+              className="w-full min-h-[38px] px-2.5 py-2 text-xs font-semibold text-blue-700 hover:text-blue-800 bg-blue-50/80 hover:bg-blue-100/80 border border-blue-200/60 rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-98"
               title="Đọc thử trích đoạn trên Google Drive"
             >
               <ExternalLink className="w-3.5 h-3.5 text-blue-600 shrink-0" />
               <span className="truncate">Đọc thử (Drive)</span>
             </button>
-
-            {canViewDetails && (
-              <button
-                onClick={handleViewDetails}
-                className="min-h-[38px] px-2.5 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center justify-center gap-1 cursor-pointer active:scale-98"
-              >
-                <BookOpen className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">Xem mục lục</span>
-              </button>
-            )}
-          </div>
+          )}
 
           {/* Primary Action Button: Mua ngay / Mua combo */}
           <button
