@@ -6,3 +6,6 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# File ebook bán (upload trực tiếp trên server, không commit vào git)
+ebooks/

@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import dns from 'node:dns';
 import path from 'path';
+import fs from 'node:fs';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
 import { db, dbReady } from './server/store.ts';
@@ -82,6 +83,9 @@ async function sendEbookEmail(order: Order, product: Product): Promise<EmailLog[
         <div style="text-align: center; margin: 24px 0;">
           <a href="${downloadUrl}" style="display: inline-block; background: #2563eb; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 700; font-size: 16px;">Tải ebook ngay</a>
         </div>
+        <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin: 0 0 8px; text-align: center;">
+          Nhấn nút trên để tải trực tiếp file PDF về máy của bạn.
+        </p>
         <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin: 0;">
           Nếu nút trên không hoạt động, hãy copy và dán link này vào trình duyệt:<br>
           <code style="background: #f1f5f9; padding: 4px 8px; border-radius: 4px; word-break: break-all;">${downloadUrl}</code>
@@ -841,7 +845,51 @@ app.delete('/api/admin/support/:id', (req: Request, res: Response) => {
   return res.json({ success: true, message: 'Đã xóa yêu cầu liên hệ' });
 });
 
-// 6. EBOOK FILE DOWNLOAD & READER API
+// 6. EBOOK FILE DOWNLOAD API
+// Chỉ trả file khi đơn hàng đã thanh toán. Nút "Tải ebook ngay" trong email trỏ về đây.
+function toDirectDownloadUrl(url: string): string {
+  // Google Drive dạng /file/d/<id>/view -> link tải trực tiếp
+  const driveFile = /drive\.google\.com\/file\/d\/([^/?#]+)/.exec(url);
+  if (driveFile) return `https://drive.google.com/uc?export=download&id=${driveFile[1]}`;
+  return url;
+}
+
+function resolveLocalEbookPath(filePath: string): string | null {
+  const root = path.resolve(__dirname);
+  const absolute = path.resolve(root, filePath.replace(/^[/\\]+/, ''));
+  // Chặn path traversal ra ngoài thư mục dự án
+  if (absolute !== root && !absolute.startsWith(root + path.sep)) return null;
+  return absolute;
+}
+
+function renderDownloadNoticePage(title: string, orderCode: string, message: string): string {
+  return `
+    <!DOCTYPE html>
+    <html lang="vi">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Tài Liệu: ${title}</title>
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; max-width: 640px; margin: 60px auto; padding: 20px; color: #1e293b; background: #f8fafc; }
+        .card { background: #fff; padding: 36px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; text-align: center; }
+        h1 { color: #1e3a8a; margin: 0 0 12px; font-size: 20px; }
+        p { color: #475569; font-size: 15px; margin: 0 0 8px; }
+        .code { font-family: monospace; background: #f1f5f9; padding: 3px 8px; border-radius: 4px; font-weight: 700; color: #2563eb; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <h1>${title}</h1>
+        <p>${message}</p>
+        <p>Mã đơn hàng: <span class="code">${orderCode}</span></p>
+        <p>Liên hệ hỗ trợ: <strong>bookdangtri@gmail.com</strong> · Zalo <strong>0944391579</strong></p>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
 app.get('/api/download/:token', (req: Request, res: Response) => {
   const { token } = req.params;
   const order = db.getOrderByDownloadToken(token);
@@ -852,58 +900,25 @@ app.get('/api/download/:token', (req: Request, res: Response) => {
 
   const product = db.getProduct(order.productId);
   const title = product?.title || 'Ebook';
+  const filePath = (product?.file_path || '').trim();
 
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.send(`
-    <!DOCTYPE html>
-    <html lang="vi">
-    <head>
-      <meta charset="UTF-8">
-      <title>Tài Liệu: ${title}</title>
-      <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; max-width: 800px; margin: 40px auto; padding: 20px; color: #1e293b; background: #f8fafc; }
-        .card { background: #fff; padding: 36px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
-        .header { border-bottom: 2px solid #2563eb; padding-bottom: 16px; margin-bottom: 24px; }
-        h1 { color: #1e3a8a; margin: 0 0 8px 0; font-size: 24px; }
-        .badge { display: inline-block; background: #dbeafe; color: #1d4ed8; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 600; }
-        .meta { color: #64748b; font-size: 14px; margin-top: 12px; }
-        .toc { background: #f1f5f9; padding: 18px 24px; border-radius: 8px; margin: 24px 0; }
-        .toc li { margin-bottom: 8px; }
-        .content { margin-top: 24px; }
-        .btn-print { background: #2563eb; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; }
-        .btn-print:hover { background: #1d4ed8; }
-      </style>
-    </head>
-    <body>
-      <div class="card">
-        <div class="header">
-          <span class="badge">Bản quyền điện tử chính thức · Định dạng PDF</span>
-          <h1>${title}</h1>
-          <p style="margin: 6px 0 0; color: #475569;">${product?.tagline || ''}</p>
-        </div>
-        <div class="meta">
-          <strong>Người mua:</strong> ${order.customerName} (${order.customerEmail})<br>
-          <strong>Mã đơn hàng:</strong> ${order.orderCode} · <strong>Số trang:</strong> ${product?.pages || 150} trang<br>
-          <strong>Ngày cấp phép:</strong> ${new Date(order.paidAt || Date.now()).toLocaleDateString('vi-VN')}
-        </div>
-        <div class="toc">
-          <h3 style="margin-top:0;">Mục lục chi tiết tài liệu:</h3>
-          <ul>
-            ${product?.table_of_contents?.map(ch => `<li>${ch}</li>`).join('') || '<li>Toàn văn tài liệu</li>'}
-          </ul>
-        </div>
-        <div class="content">
-          <h3>Lời mở đầu</h3>
-          <p>${product?.description || ''}</p>
-          <p>Tài liệu này được tạo và gửi tự động từ hệ thống thanh toán SePay. Vui lòng không chia sẻ liên kết tải trực tiếp ra bên ngoài.</p>
-          <div style="margin-top: 30px;">
-            <button class="btn-print" onclick="window.print()">In hoặc Lưu dưới dạng PDF</button>
-          </div>
-        </div>
-      </div>
-    </body>
-    </html>
-  `);
+  if (!filePath) {
+    return res.status(404).send(renderDownloadNoticePage(title, order.orderCode, 'Sản phẩm này chưa được cấu hình đường dẫn file PDF. Vui lòng liên hệ để được hỗ trợ.'));
+  }
+
+  // Trường hợp file_path là đường dẫn ngoài (Google Drive, Dropbox, ...)
+  if (/^https?:\/\//i.test(filePath)) {
+    return res.redirect(302, toDirectDownloadUrl(filePath));
+  }
+
+  // Trường hợp file_path là đường dẫn nội bộ trên server
+  const absolute = resolveLocalEbookPath(filePath);
+  if (!absolute || !fs.existsSync(absolute)) {
+    console.error(`[DOWNLOAD] Khong tim thay file: ${filePath} (don ${order.orderCode})`);
+    return res.status(404).send(renderDownloadNoticePage(title, order.orderCode, 'File tài liệu đang được cập nhật lên hệ thống. Vui lòng liên hệ để được gửi trực tiếp.'));
+  }
+
+  return res.download(absolute, path.basename(absolute));
 });
 
 // ==========================================
