@@ -82,11 +82,8 @@ async function sendEbookEmail(order: Order, product: Product): Promise<EmailLog[
         <div style="text-align: center; margin: 24px 0;">
           <a href="${downloadUrl}" style="display: inline-block; background: #2563eb; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 700; font-size: 16px;">Tải ebook ngay</a>
         </div>
-        <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin: 0 0 8px; text-align: center;">
-          Nhấn nút trên để tải tài liệu về máy của bạn.
-        </p>
         <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin: 0;">
-          Nếu nút trên không hoạt động, hãy copy và dán link này vào trình duyệt:<br>
+          <strong style="color: #1e293b;">Lưu ý quan trọng:</strong> Nếu nút trên không hoạt động, hãy đánh dấu đây không phải mail rác, sau đó vào mail chính tải bình thường. Hoặc copy và dán link này vào trình duyệt để tải trực tiếp:<br>
           <code style="background: #f1f5f9; padding: 4px 8px; border-radius: 4px; word-break: break-all;">${downloadUrl}</code>
         </p>
         <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;">
