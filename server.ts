@@ -701,7 +701,9 @@ app.post('/api/sepay/test-webhook', async (req: Request, res: Response) => {
 // 4. ADMIN PORTAL APIS
 app.post('/api/admin/login', (req: Request, res: Response) => {
   const { password } = req.body;
-  if (password === 'admin123' || password === 'admin') {
+  // Mật khẩu quản trị đọc từ biến môi trường ADMIN_PASSWORD (file .env), không hard-code trong code.
+  const adminPassword = (process.env.ADMIN_PASSWORD || '').trim();
+  if (adminPassword && typeof password === 'string' && password === adminPassword) {
     return res.json({ success: true, token: 'admin_session_token_ok', role: 'admin' });
   }
   return res.status(401).json({ error: 'Mật khẩu quản trị không chính xác' });

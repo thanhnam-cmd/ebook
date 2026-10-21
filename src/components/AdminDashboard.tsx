@@ -172,7 +172,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         setIsAuthenticated(true);
         fetchDashboardData();
       } else {
-        setLoginError('Mật khẩu quản trị không đúng. (Mặc định: admin123)');
+        setLoginError('Mật khẩu quản trị không đúng.');
       }
     } catch (err) {
       setLoginError('Không thể kết nối đến máy chủ.');
