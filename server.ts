@@ -24,17 +24,15 @@ app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
 // Helper: Generate Unique Order Code (e.g. MM1024, MM1025)
-// Quét mã đơn lớn nhất đang có để tránh trùng mã sau khi khởi động lại / đổi nguồn dữ liệu.
-let orderCounter = (() => {
+// Tính mã lớn nhất NGAY LÚC TẠO ĐƠN (không tính lúc khởi động) vì dữ liệu DB
+// được nạp bất đồng bộ; tính sớm sẽ sinh mã trùng và đơn không lưu được.
+function generateOrderCode(): string {
   let max = 1023;
   for (const o of db.getOrders()) {
     const match = /^MM(\d+)$/i.exec(o.orderCode || '');
     if (match) max = Math.max(max, parseInt(match[1], 10));
   }
-  return max + 1;
-})();
-function generateOrderCode(): string {
-  return `MM${orderCounter++}`;
+  return `MM${max + 1}`;
 }
 
 // Helper: Send Ebook Delivery Email via SMTP (nodemailer)
