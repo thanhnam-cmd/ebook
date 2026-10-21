@@ -186,14 +186,12 @@ export const HomePage: React.FC<HomePageProps> = ({
             </h3>
 
             <div className="space-y-2">
-              <p className="text-xs font-bold uppercase tracking-wider text-blue-600">Câu trích</p>
               <p className="text-base sm:text-lg text-slate-700 leading-relaxed italic border-l-4 border-blue-600 pl-4 py-1 bg-slate-50/60 rounded-r-xl">
                 &ldquo;Tôi không viết để làm bạn dễ chịu nhất thời. Tôi viết thẳng những gì mình đã thấy và đã làm, mong bạn đỡ phải đi đường vòng như tôi.&rdquo;
               </p>
             </div>
 
             <div className="space-y-2">
-              <p className="text-xs font-bold uppercase tracking-wider text-blue-600">Đoạn mô tả</p>
               <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                 Sau một giai đoạn khó khăn trong đời sống riêng, Đăng Trí tìm đến tâm lý học như một cách hiểu mình và hiểu người. Những gì học được và tự thực hành mỗi ngày là nền của mọi cuốn sách ở đây.
               </p>
