@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import dns from 'node:dns';
 import path from 'path';
 import fs from 'node:fs';
+import { Readable } from 'node:stream';
 import { fileURLToPath } from 'url';
 import nodemailer from 'nodemailer';
 import { db, dbReady } from './server/store.ts';
@@ -82,7 +83,7 @@ async function sendEbookEmail(order: Order, product: Product): Promise<EmailLog[
           <a href="${downloadUrl}" style="display: inline-block; background: #2563eb; color: #fff; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 700; font-size: 16px;">Tải ebook ngay</a>
         </div>
         <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin: 0 0 8px; text-align: center;">
-          Nhấn nút trên để tải trực tiếp file PDF về máy của bạn.
+          Nhấn nút trên để tải tài liệu về máy của bạn.
         </p>
         <p style="font-size: 13px; color: #64748b; line-height: 1.5; margin: 0;">
           Nếu nút trên không hoạt động, hãy copy và dán link này vào trình duyệt:<br>
@@ -845,11 +846,64 @@ app.delete('/api/admin/support/:id', (req: Request, res: Response) => {
 
 // 6. EBOOK FILE DOWNLOAD API
 // Chỉ trả file khi đơn hàng đã thanh toán. Nút "Tải ebook ngay" trong email trỏ về đây.
+// Cột "Đường dẫn file" trong Admin có thể là file trên server HOẶC bất kỳ link nào.
 function toDirectDownloadUrl(url: string): string {
   // Google Drive dạng /file/d/<id>/view -> link tải trực tiếp
   const driveFile = /drive\.google\.com\/file\/d\/([^/?#]+)/.exec(url);
   if (driveFile) return `https://drive.google.com/uc?export=download&id=${driveFile[1]}`;
   return url;
+}
+
+// Suy ra ten file khi tai ve (uu tien ten do server nguon tra ve)
+function guessFileName(rawUrl: string, contentDisposition: string | null, fallback: string): string {
+  if (contentDisposition) {
+    const utf8 = /filename\*=UTF-8''([^;]+)/i.exec(contentDisposition);
+    if (utf8) {
+      try { return decodeURIComponent(utf8[1].trim()); } catch { /* bo qua */ }
+    }
+    const plain = /filename="?([^";]+)"?/i.exec(contentDisposition);
+    if (plain && plain[1].trim()) return plain[1].trim();
+  }
+  try {
+    const base = decodeURIComponent(path.basename(new URL(rawUrl).pathname));
+    if (base && base !== '/') return base;
+  } catch { /* bo qua */ }
+  return fallback;
+}
+
+// Tai file tu link ngoai (Google Drive, Dropbox, link truc tiep...) va tra ve duoi dang attachment
+// de trinh duyet tai ve may. Neu link khong phai file that (vd trang HTML / thu muc Drive) thi mo truc tiep.
+async function streamExternalDownload(url: string, fallbackName: string, res: Response) {
+  const target = toDirectDownloadUrl(url);
+  try {
+    const upstream = await fetch(target, {
+      redirect: 'follow',
+      signal: AbortSignal.timeout(20000),
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36',
+      },
+    });
+
+    const contentType = (upstream.headers.get('content-type') || '').toLowerCase();
+
+    // Khong phai file nhi phan (trang HTML hoac thu muc Drive) -> chuyen huong de khach mo truc tiep
+    if (!upstream.ok || !upstream.body || contentType.includes('text/html')) {
+      return res.redirect(302, target);
+    }
+
+    const fileName = guessFileName(target, upstream.headers.get('content-disposition'), fallbackName);
+    const asciiName = fileName.replace(/[^\x20-\x7E]/g, '_').replace(/"/g, '');
+    res.setHeader('Content-Type', contentType || 'application/octet-stream');
+    res.setHeader('Content-Disposition', `attachment; filename="${asciiName}"; filename*=UTF-8''${encodeURIComponent(fileName)}`);
+    const len = upstream.headers.get('content-length');
+    if (len) res.setHeader('Content-Length', len);
+
+    Readable.fromWeb(upstream.body as any).pipe(res);
+    return;
+  } catch (err: any) {
+    console.warn(`[DOWNLOAD] Khong tai truc tiep duoc link ngoai (${target}): ${err?.message || err}. Chuyen huong truc tiep.`);
+    return res.redirect(302, target);
+  }
 }
 
 function resolveLocalEbookPath(filePath: string): string | null {
@@ -888,7 +942,7 @@ function renderDownloadNoticePage(title: string, orderCode: string, message: str
   `;
 }
 
-app.get('/api/download/:token', (req: Request, res: Response) => {
+app.get('/api/download/:token', async (req: Request, res: Response) => {
   const { token } = req.params;
   const order = db.getOrderByDownloadToken(token);
 
@@ -901,15 +955,15 @@ app.get('/api/download/:token', (req: Request, res: Response) => {
   const filePath = (product?.file_path || '').trim();
 
   if (!filePath) {
-    return res.status(404).send(renderDownloadNoticePage(title, order.orderCode, 'Sản phẩm này chưa được cấu hình đường dẫn file PDF. Vui lòng liên hệ để được hỗ trợ.'));
+    return res.status(404).send(renderDownloadNoticePage(title, order.orderCode, 'Sản phẩm này chưa được cấu hình đường dẫn file. Vui lòng liên hệ để được hỗ trợ.'));
   }
 
-  // Trường hợp file_path là đường dẫn ngoài (Google Drive, Dropbox, ...)
+  // Trường hợp "Đường dẫn file" là link ngoài (Google Drive, Dropbox, link tải trực tiếp...)
   if (/^https?:\/\//i.test(filePath)) {
-    return res.redirect(302, toDirectDownloadUrl(filePath));
+    return streamExternalDownload(filePath, `${title}.pdf`, res);
   }
 
-  // Trường hợp file_path là đường dẫn nội bộ trên server
+  // Trường hợp "Đường dẫn file" là file nội bộ trên server
   const absolute = resolveLocalEbookPath(filePath);
   if (!absolute || !fs.existsSync(absolute)) {
     console.error(`[DOWNLOAD] Khong tim thay file: ${filePath} (don ${order.orderCode})`);

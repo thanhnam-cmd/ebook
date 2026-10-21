@@ -1226,13 +1226,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         </div>
 
                         <div>
-                          <label className="block font-bold text-slate-700 mb-1">Đường dẫn file PDF</label>
+                          <label className="block font-bold text-slate-700 mb-1">Đường dẫn file</label>
                           <input
                             type="text"
+                            placeholder="/ebooks/ten-file.pdf hoặc https://drive.google.com/file/d/.../view"
                             value={prodForm.file_path || ''}
                             onChange={e => setProdForm({ ...prodForm, file_path: e.target.value })}
                             className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg font-mono"
                           />
+                          <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                            Dán bất kỳ link nào (Google Drive, Dropbox, link tải trực tiếp...) hoặc đường dẫn file trên server. Khi khách bấm &ldquo;Tải ebook ngay&rdquo; trong email sẽ tải đúng đường dẫn này.
+                          </p>
                         </div>
 
                         <div className="sm:col-span-2">

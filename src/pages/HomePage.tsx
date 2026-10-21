@@ -182,16 +182,22 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
 
             <h3 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight cinematic-text">
-              Đăng Trí — Đồng hành kiến tạo tư duy nội tại
+              Đăng Trí - Viết từ những điều đã tự đi qua
             </h3>
 
-            <p className="text-base sm:text-lg text-slate-700 leading-relaxed italic border-l-4 border-blue-600 pl-4 py-1 bg-slate-50/60 rounded-r-xl">
-              &ldquo;Tôi viết những cuốn sách này không phải để bạn tích trữ thêm thông tin, mà để bạn có thể gập sách lại và ngay lập tức đưa ra những quyết định sáng suốt hơn trong công việc và các mối quan hệ.&rdquo;
-            </p>
+            <div className="space-y-2">
+              <p className="text-xs font-bold uppercase tracking-wider text-blue-600">Câu trích</p>
+              <p className="text-base sm:text-lg text-slate-700 leading-relaxed italic border-l-4 border-blue-600 pl-4 py-1 bg-slate-50/60 rounded-r-xl">
+                &ldquo;Tôi không viết để làm bạn dễ chịu nhất thời. Tôi viết thẳng những gì mình đã thấy và đã làm, mong bạn đỡ phải đi đường vòng như tôi.&rdquo;
+              </p>
+            </div>
 
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-              Tác giả Đăng Trí đã cố vấn và đồng hành cùng nhiều độc giả, doanh nhân trẻ và nhà quản lý vượt qua khủng hoảng tâm lý, giải phóng tâm trí khỏi bẫy overthinking để xây dựng nền tảng tư duy và tự do tài chính bền vững.
-            </p>
+            <div className="space-y-2">
+              <p className="text-xs font-bold uppercase tracking-wider text-blue-600">Đoạn mô tả</p>
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+                Sau một giai đoạn khó khăn trong đời sống riêng, Đăng Trí tìm đến tâm lý học như một cách hiểu mình và hiểu người. Những gì học được và tự thực hành mỗi ngày là nền của mọi cuốn sách ở đây.
+              </p>
+            </div>
 
             <div className="pt-4 flex justify-center sm:justify-start">
               <button
